@@ -1,0 +1,12 @@
+{
+  "title": "Zero Balance Trays",
+  "tags": [
+    "Algorithm Complexity and Big O Notation",
+    "Searching Algorithms"
+  ],
+  "model_breaking": false,
+  "time": 1,
+  "space": 32,
+  "new_colab_link": "https://colab.research.google.com/drive/1efjfrnoh302rhnRuad5qLfit8y890Ti2",
+  "github_link": "https://github.com/MSFT-Codeforces/zero_balance_trays"
+}

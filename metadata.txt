@@ -1,0 +1,9 @@
+# Metadata
+**Category:** - Coding
+**Topic:** - Competitive Programming
+**Subtopic:** - ["Algorithm Complexity and Big O Notation", "Searching Algorithms"]
+**Difficulty:** - Hard
+**Languages:** - Python
+**Number of Approaches:** - 4, ($O(2^{a+b})$ -> $O(\min(a,k))$ -> $O(\log(\min(a,k)+1))$ -> $O(1)$)
+**Number of Chains:** - 7
+**Model-Breaking:** - False

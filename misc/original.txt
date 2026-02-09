@@ -1,0 +1,81 @@
+**Problem Statement**
+Sakurako has an array that contains exactly `a` numbers equal to `1` and `b` numbers equal to `2`.
+
+She must put either a `'+'` sign or a `'-'` sign in front of every element (each element is used exactly once). After that, all signed values are added together.
+
+Determine for each test case whether it is possible to choose the signs so that the final sum equals `0`.
+
+**Input Format**
+- The first line contains an integer `t` (`1 ≤ t ≤ 100`) — the number of test cases.
+- Each of the next `t` lines contains two integers `a` and `b` (`0 ≤ a, b < 10`) — the number of ones and the number of twos in the array.
+
+**Output Format**
+For each test case, print `"YES"` if it is possible to make the total sum equal to `0`, otherwise print `"NO"`.
+
+Any letter case is accepted.
+
+**Examples**
+Input:
+```
+5
+0 1
+0 3
+2 0
+2 3
+3 1
+```
+
+Output:
+```
+NO
+NO
+YES
+YES
+NO
+```
+
+**Editorial**
+Putting signs is equivalent to splitting the multiset into two groups with equal sum:
+
+Let `P` be the elements with `'+'` and `N` be the elements with `'-'`.
+We need:
+`sum(P) - sum(N) = 0`  ⇒  `sum(P) = sum(N)`.
+
+So the total sum `S = a + 2b` must be even. Since `2b` is always even, this requires:
+- `a` must be even, otherwise the answer is `"NO"`.
+
+Now assume `a` is even. If `a = 0`, the array consists only of `2`s. To get sum `0`, the number of `+2` must equal the number of `-2`, which is possible only when:
+- `b` is even.
+
+If `a > 0` and `a` is even, the answer is always `"YES"`:
+- If `b` is even, split the `2`s equally and also split the `1`s equally.
+- If `b` is odd, after splitting the `2`s as evenly as possible, one side is larger by `2`; this can be fixed by moving two `1`s to the smaller side. Since `a` is even and positive, we have at least two `1`s available when needed.
+
+So the final conditions are:
+- If `a` is odd → `"NO"`.
+- Else if `a = 0` and `b` is odd → `"NO"`.
+- Otherwise → `"YES"`.
+
+**Code**
+```python
+import sys
+
+def solve() -> None:
+    it = iter(sys.stdin.read().strip().split())
+    t = int(next(it))
+    out_lines = []
+    for _ in range(t):
+        a = int(next(it))
+        b = int(next(it))
+        if a % 2 == 1:
+            out_lines.append("NO")
+        else:
+            if a == 0 and b % 2 == 1:
+                out_lines.append("NO")
+            else:
+                out_lines.append("YES")
+    sys.stdout.write("\n".join(out_lines))
+
+if __name__ == "__main__":
+    solve()
+```

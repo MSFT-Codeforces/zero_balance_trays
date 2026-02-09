@@ -1,0 +1,74 @@
+
+You are an expert competitive programmer. 
+You will be provided with a problem statement, first analyze the problem, then provide your solution in Python. 
+Consider edge cases, time complexity, and space complexity. 
+Make sure your solution handles all constraints mentioned in the problem. 
+Your final solution should be a complete, compilable Python program in a python codeblock.
+
+**Zero Balance Trays**
+
+You have a multiset of tiles containing exactly $a$ tiles of value $1$ and exactly $b$ tiles of value $2$.
+
+For each query, you must place every tile into exactly one of two trays:
+
+- **Sun tray** (adds to the sum)
+- **Moon tray** (subtracts from the sum)
+
+The net energy is defined as:
+
+$$(\text{sum in Sun tray})-(\text{sum in Moon tray})$$
+
+In the query, an integer $k$ is given: **exactly $k$ tiles must be placed into the Sun tray** (so the remaining $a+b-k$ tiles go to the Moon tray).
+
+For each query, determine whether it is possible to make the net energy exactly $0$.
+
+- If possible, output two integers $x$ and $y$:
+  - $x$ = number of value-$1$ tiles placed into the Sun tray
+  - $y$ = number of value-$2$ tiles placed into the Sun tray
+- Otherwise output $-1$.
+
+It is guaranteed that for fixed $(a,b,k)$, if a solution exists then the pair $(x,y)$ is unique.
+
+**Input Format:-**
+
+The first line contains an integer $t$ — the number of test cases.
+
+Each test case contains:
+- A line with three integers $a$, $b$, $q$.
+- Then $q$ integers $k$ (possibly spanning multiple lines), one per query.
+
+**Output Format:-**
+
+For each query, print:
+- $-1$ if it is impossible, or
+- two integers $x$ and $y$ representing a valid distribution into the Sun tray.
+
+**Constraints:-**
+
+- $1 \le t \le 2 \cdot 10^4$
+- $0 \le a,b \le 10^{18}$
+- $1 \le q \le 2 \cdot 10^5$
+- The sum of $q$ over all test cases is at most $2 \cdot 10^5$
+- Each query integer $k$ fits in signed 64-bit (if $k \notin [0,a+b]$, it is impossible)
+
+**Examples:-**
+ - **Input:**
+```
+2
+4 1 5
+0 1 2 3 5
+3 10 3
+5 8 13
+```
+
+ - **Output:**
+```
+-1
+-1
+3 0
+1 1
+-1
+-1
+-1
+-1
+```

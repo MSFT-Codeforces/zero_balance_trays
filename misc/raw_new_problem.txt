@@ -1,0 +1,147 @@
+## Problem: Zero Sum With Exactly `k` Pluses
+
+Sakurako has a multiset containing exactly `a` numbers equal to `1` and `b` numbers equal to `2`.
+
+She must put either a `'+'` sign or a `'-'` sign in front of every element (each element is used exactly once). After that, all signed values are added together.
+
+You are given `q` queries. In the `i`-th query, an integer `k` is given: **exactly `k` elements must receive a `'+'` sign** (so exactly `a+b-k` elements receive `'-'`).
+
+For each query, determine whether it is possible to make the final sum equal to `0`.
+
+- If it is possible, output two integers:
+  - `p1`: how many of the `1`s have a `'+'` sign
+  - `p2`: how many of the `2`s have a `'+'` sign
+- Otherwise output `-1`.
+
+It can be shown that for fixed `(a, b, k)`, if a solution exists then the pair `(p1, p2)` is unique.
+
+---
+
+### Input Format
+- The first line contains an integer `t` — the number of test cases.
+- Each test case begins with three integers `a`, `b`, `q`.
+- Then follow `q` integers `k1, k2, ..., kq` (possibly across multiple lines).
+
+### Output Format
+For each query, print:
+- `-1` if it is impossible, otherwise print `p1 p2`.
+
+---
+
+### Constraints
+- `1 ≤ t ≤ 2⋅10^4`
+- `0 ≤ a, b ≤ 10^18`
+- `1 ≤ q ≤ 2⋅10^5`
+- Sum of `q` over all test cases ≤ `2⋅10^5`
+- Each query integer `k` fits in 64-bit signed integer (if `k` is outside `0..a+b`, it is impossible)
+
+---
+
+## Editorial / Solution
+
+Let:
+- `p1` be the number of `1`s assigned `'+'` (so `a - p1` ones get `'-'`)
+- `p2` be the number of `2`s assigned `'+'` (so `b - p2` twos get `'-'`)
+
+### 1) The “exactly k pluses” constraint
+\[
+p1 + p2 = k
+\]
+
+### 2) The zero-sum constraint
+Contribution of ones:
+\[
+(+1)\cdot p1 + (-1)\cdot(a-p1) = 2p1 - a
+\]
+Contribution of twos:
+\[
+(+2)\cdot p2 + (-2)\cdot(b-p2) = 4p2 - 2b
+\]
+Zero sum means:
+\[
+(2p1-a) + (4p2-2b) = 0
+\Rightarrow 2p1 + 4p2 = a + 2b
+\Rightarrow p1 + 2p2 = \frac{a+2b}{2}
+\]
+
+Let
+\[
+H = \frac{a+2b}{2}
+\]
+Since `2b` is always even, **`H` is an integer iff `a` is even**. If `a` is odd, no query can ever work.
+
+### 3) Solve the linear system
+\[
+\begin{cases}
+p1 + p2 = k \\
+p1 + 2p2 = H
+\end{cases}
+\]
+Subtract the first equation from the second:
+\[
+p2 = H - k
+\]
+Then:
+\[
+p1 = k - p2 = k - (H-k) = 2k - H
+\]
+
+So for each query, the candidate solution is uniquely determined:
+- `p2 = H - k`
+- `p1 = 2k - H`
+
+It is feasible iff:
+- `0 ≤ k ≤ a+b`
+- `0 ≤ p1 ≤ a`
+- `0 ≤ p2 ≤ b`
+
+Each query is answered in **O(1)** time.
+
+---
+
+## Reference Implementation (Python)
+
+```python
+import sys
+
+def solve() -> None:
+    it = iter(sys.stdin.buffer.read().split())
+    t = int(next(it))
+    out = []
+
+    for _ in range(t):
+        a = int(next(it))
+        b = int(next(it))
+        q = int(next(it))
+
+        if a % 2 == 1:
+            # H is not integer -> impossible for every query in this test case
+            for _ in range(q):
+                next(it)  # consume k
+                out.append("-1")
+            continue
+
+        # H = (a + 2b)/2 = a/2 + b
+        H = a // 2 + b
+
+        total = a + b
+        for _ in range(q):
+            k = int(next(it))
+
+            if k < 0 or k > total:
+                out.append("-1")
+                continue
+
+            p2 = H - k
+            p1 = 2 * k - H
+
+            if 0 <= p1 <= a and 0 <= p2 <= b:
+                out.append(f"{p1} {p2}")
+            else:
+                out.append("-1")
+
+    sys.stdout.write("\n".join(out))
+
+if __name__ == "__main__":
+    solve()
+```

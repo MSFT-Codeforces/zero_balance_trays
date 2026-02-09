@@ -1,0 +1,92 @@
+### Corrections / factual checks
+- The derivation is correct: net energy `0` ⇔ `sumSun = (a+2b)/2`, and with `x+y=k` we get the unique candidate  
+  `T = (a+2b)/2`, `y = T − k`, `x = 2k − T`.
+- Parity condition can be stated more sharply: since `2b` is always even, **`a+2b` is odd iff `a` is odd**. So if `a` is odd, *every* query is impossible.
+- For `k=a+b` (all tiles in Sun), net energy equals total sum `a+2b`. With nonnegative `a,b`, this is `0` **only when `a=b=0`** (worth explicitly testing).
+- About “invalid input”: the format is always valid; but **out-of-range `k` values are allowed by the statement and must yield `-1`**. So these are “out-of-range queries”, not invalid input.
+
+Everything else in the reasoning stands; below is the refined reasoning incorporating these clarifications.
+
+---
+
+## Key observations to guide test design
+For each query with given `k`, we need integers `(x,y)` such that:
+- `x` = # of 1-tiles in Sun, `y` = # of 2-tiles in Sun
+- `x + y = k`
+- Net energy `= 0`
+
+Let total sum be `S = a + 2b`. If Sun sum is `P = x + 2y`, then
+`(Sun − Moon) = P − (S − P) = 2P − S`.  
+So net `0` ⇔ `2P = S` ⇔ `P = S/2`.
+
+Therefore:
+- If `S` is odd (equivalently **`a` is odd**), no solution exists for any `k`.
+- Otherwise let `T = S/2`. For each query:
+  - `y = T − k`
+  - `x = 2k − T`
+  - Valid iff:
+    - `0 ≤ k ≤ a+b`
+    - `0 ≤ x ≤ a`
+    - `0 ≤ y ≤ b`
+
+So tests should focus on parity, boundary feasibility of `x,y`, and robust handling of extreme/out-of-range `k`.
+
+---
+
+## 1) Input range boundaries (minimum/maximum values)
+Include cases hitting extremes of parameters and derived values:
+- `a=0, b=0` with `k=0` (only solvable query) and `k≠0` (impossible).
+- One type absent:
+  - `a=0, b>0`
+  - `b=0, a>0`
+- Maximum sizes: `a=10^18`, `b=10^18`, with `k=0`, `k=a+b`, and middle/near-middle `k`.
+- Limits on test volume:
+  - Many test cases (`t` large) with tiny `q` (overhead/I/O stress).
+  - One test with `q` close to the global limit (per-query performance and input parsing).
+
+---
+
+## 2) Structural edge cases
+These catch logic that “mostly works” but fails on special shapes:
+- **Parity-all-impossible**: choose `a` odd so every query must output `-1`, even if `k` is in-range.
+- **Boundary-valid solutions** where the unique solution hits edges:
+  - `x=0` or `x=a`
+  - `y=0` or `y=b`
+  - `k=0` (forces `x=y=0`)
+  - `k=a+b` (solvable only if `a=b=0`)
+- **Near-boundary off-by-one**: construct queries where the computed candidate gives `x=a+1`, `x=-1`, `y=b+1`, `y=-1` (must reject).
+- Duplicate `k` queries (ensure consistent stateless behavior).
+- Random ordering of queries (ensure no monotonicity assumptions).
+
+---
+
+## 3) Stress conditions (large `N`, skew, worst patterns)
+Target non-O(1)-per-query approaches (e.g., looping over possible `x` or `y`):
+- Very large `a,b` with very large `q` and mixed solvable/unsolvable queries.
+- Skewed distributions:
+  - `a` huge, `b` tiny (or vice versa), to break assumptions like “enough 2’s to adjust”.
+- Patterns that make brute force worst-case (e.g., `b` huge and many queries forcing search over `y`).
+
+---
+
+## 4) Common implementation mistakes to expose
+Design tests to trigger typical bugs:
+- Missing parity check (especially forgetting that odd `a` kills all queries).
+- Not checking `k` range `[0,a+b]` before further computation.
+- **Overflow pitfalls**:
+  - While `a+2b ≤ 3·10^18` fits in signed 64-bit, **`k` may be any signed 64-bit**, possibly far outside `[0,a+b]`.
+  - If code computes `2*k` in 64-bit before rejecting out-of-range `k`, it can overflow.
+  - Use tests with `k` near `LLONG_MAX` / `LLONG_MIN` to catch this; correct code should either guard first or use `__int128` for intermediates.
+- Using 32-bit integers anywhere (will break on `1e18`).
+- Sign mistakes in formulas (`T-k` vs `k-T`, etc.).
+- Confusing counts vs sums (treating `x,y` as values instead of tile counts).
+- Input parsing of `q` integers across arbitrary line breaks.
+
+---
+
+## 5) Out-of-range queries (allowed by statement)
+Not “invalid format”, but required behavior:
+- `k < 0` (e.g., `-1`)
+- `k > a+b` (e.g., `a+b+1`)
+- Extremely large magnitude `k` near 64-bit limits  
+All must return `-1` without overflow/crash.

@@ -1,0 +1,115 @@
+**Zero Balance Trays**
+
+Time Limit: **1 seconds**
+
+Memory Limit: **32 MB**
+
+You have a multiset of tiles containing exactly $a$ tiles of value $1$ and exactly $b$ tiles of value $2$.
+
+For each query, you must place every tile into exactly one of two trays:
+
+- **Sun tray** (adds to the sum)
+- **Moon tray** (subtracts from the sum)
+
+The net energy is defined as:
+
+$$(\text{sum in Sun tray})-(\text{sum in Moon tray})$$
+
+In the query, an integer $k$ is given: **exactly $k$ tiles must be placed into the Sun tray** (so the remaining $a+b-k$ tiles go to the Moon tray).
+
+For each query, determine whether it is possible to make the net energy exactly $0$.
+
+- If possible, output two integers $x$ and $y$:
+  - $x$ = number of value-$1$ tiles placed into the Sun tray
+  - $y$ = number of value-$2$ tiles placed into the Sun tray
+- Otherwise output $-1$.
+
+It is guaranteed that for fixed $(a,b,k)$, if a solution exists then the pair $(x,y)$ is unique.
+
+**Input Format:-**
+
+The first line contains an integer $t$ — the number of test cases.
+
+Each test case contains:
+- A line with three integers $a$, $b$, $q$.
+- Then $q$ integers $k$ (possibly spanning multiple lines), one per query.
+
+**Output Format:-**
+
+For each query, print:
+- $-1$ if it is impossible, or
+- two integers $x$ and $y$ representing a valid distribution into the Sun tray.
+
+**Constraints:-**
+
+- $1 \le t \le 2 \cdot 10^4$
+- $0 \le a,b \le 10^{18}$
+- $1 \le q \le 2 \cdot 10^5$
+- The sum of $q$ over all test cases is at most $2 \cdot 10^5$
+- Each query integer $k$ fits in signed 64-bit (if $k \notin [0,a+b]$, it is impossible)
+**Examples:-**
+ - **Input:**
+```
+3
+0 2 2
+1
+0
+3 1 3
+0 2
+4
+2 3 4
+1 2
+3 4
+```
+
+ - **Output:**
+```
+0 1
+-1
+-1
+-1
+-1
+-1
+0 2
+2 1
+-1
+```
+
+ - **Input:**
+```
+1
+4 1 6
+3 1 3 2 0 4
+```
+
+ - **Output:**
+```
+3 0
+-1
+3 0
+1 1
+-1
+-1
+```
+
+**Note:-**  
+In the first example, **test case 1** has $a=0$, $b=2$. The total sum is $S=a+2b=4$, so the Sun tray must have sum $S/2=2$.  
+- For $k=1$, the only way to get sum $2$ using exactly one tile is to place one "2" in Sun: $(x,y)=(0,1)$.  
+- For $k=0$, Sun sum would be $0\ne 2$, so it is impossible.
+
+In the first example, **test case 2** has $a=3$, $b=1$, so $S=a+2b=5$ is odd. Since $S/2$ is not an integer, net energy $0$ cannot be achieved for any $k$, hence all queries output $-1$.
+
+In the first example, **test case 3** has $a=2$, $b=3$, so $S=a+2b=8$ and the Sun tray must have sum $S/2=4$. For each query we need
+$$x+y=k,\quad x+2y=4.$$
+- $k=1$ gives maximum Sun sum $2$, so impossible.  
+- $k=2$ gives $y=2$, $x=0$, so output $0\ 2$.  
+- $k=3$ gives $y=1$, $x=2$, so output $2\ 1$.  
+- $k=4$ gives $y=0$, $x=4$ but $x>a=2$, so impossible.
+
+In the first example, **test case 1** of the second sample has $a=4$, $b=1$, so $S=a+2b=6$ and the Sun tray must have sum $S/2=3$.  
+- $k=3$: solving $x+y=3$ and $x+2y=3$ gives $(x,y)=(3,0)$.  
+- $k=1$: would require $y=2$ (not possible since $b=1$), so $-1$.  
+- $k=3$ again gives $(3,0)$.  
+- $k=2$: solving gives $(x,y)=(1,1)$.  
+- $k=0$: Sun sum would be $0\ne 3$, so $-1$.  
+- $k=4$: solving forces $y<0$, so $-1$.

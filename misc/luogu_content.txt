@@ -1,0 +1,9 @@
+First of all, this task is the same as: "divide an array into two arrays with equal sum". So, obviously, we need to check if the sum of all elements is even which implies that the number of ones is even. Then, we can out half of 2s in one array and the other half in another, but if number of 2s is odd, then one array will have a greater sum then another, so we need to put two 1s there.
+
+So, if we don't have two ones while the number of 2s is odd then the answer is "NO". Also, if sum is odd, the answer is also "NO". In all other cases, the answer is "YES".
+
+**Solution in C++**
+
+```cpp
+#include <bits/stdc++.h>using namespace std; namespace std { template <int D, typename T>struct Vec : public vector<Vec<D - 1, T>> {    static_assert(D >= 1);    template <typename... Args>    Vec(int n = 0, Args... args) : vector<Vec<D - 1, T>>(n, Vec<D - 1, T>(args...)) {}}; template <typename T>struct Vec<1, T> : public vector<T> {    Vec(int n = 0, T val = T()) : std::vector<T>(n, val) {}}; template <class Fun>class y_combinator_result {    Fun fun_;    public:    template <class T>    explicit y_combinator_result(T &&fun) : fun_(std::forward<T>(fun)) {}     template <class... Args>    decltype(auto) operator()(Args &&...args) {        return fun_(std::ref(*this), std::forward<Args>(args)...);    }}; template <class Fun>decltype(auto) y_combinator(Fun &&fun) {    return y_combinator_result<std::decay_t<Fun>>(std::forward<Fun>(fun));} }  // namespace std int32_t main() {    ios_base::sync_with_stdio(0);    cin.tie(0);     int t;    cin >> t;    while (t--) {        int a, b;        cin >> a >> b;        if (a % 2) {            cout << "NO\n";        } else {            if (a == 0) {                if (b % 2) {                    cout << "NO\n";                } else {                    cout << "YES\n";                }            } else {                cout << "YES\n";            }        }    }}
+```

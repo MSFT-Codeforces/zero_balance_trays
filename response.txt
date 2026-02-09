@@ -1,0 +1,209 @@
+**1. Problem Understanding**
+
+For each test case, there are exactly $a$ tiles of value $1$ and $b$ tiles of value $2$.  
+Each query gives an integer $k$: exactly $k$ tiles must be placed into the Sun tray
+(positive), and the remaining $a+b-k$ tiles go into the Moon tray (negative).
+
+Let:
+- $x$ = number of value-$1$ tiles in the Sun tray
+- $y$ = number of value-$2$ tiles in the Sun tray
+
+Then:
+- Exactly $k$ tiles are in Sun:
+$$x+y=k.$$
+- Net energy must be $0$:
+$$(\text{sum in Sun})-(\text{sum in Moon})=0.$$
+
+For each query, output the unique feasible pair $(x,y)$, or output $-1$ if it is
+impossible.
+
+---
+
+**2. Optimal Approach**
+
+Compute the net energy using $x$ and $y$.
+
+- Ones contribute: $x-(a-x)=2x-a$
+- Twos contribute: $2y-2(b-y)=4y-2b$
+
+Net energy $0$ implies:
+$$(2x-a)+(4y-2b)=0 \Rightarrow 2x+4y=a+2b.$$
+Divide by $2$:
+$$x+2y=\frac{a+2b}{2}.$$
+
+Let:
+$$H=\frac{a+2b}{2}.$$
+
+Since $2b$ is even, $H$ is an integer if and only if $a$ is even.
+- If $a$ is odd, every query answer is $-1$.
+
+Otherwise, solve:
+$$\begin{cases}
+x+y=k \\
+x+2y=H
+\end{cases}$$
+
+Subtract the first equation from the second:
+$$y=H-k,$$
+$$x=2k-H.$$
+
+For each query, compute this unique candidate and check:
+- $0 \le k \le a+b$
+- $0 \le x \le a$
+- $0 \le y \le b$
+
+If all hold, print $x\ y$, else print $-1$.
+
+---
+
+**3. Code**
+```python
+"""Solve the "Zero Balance Trays" problem using closed-form equations."""
+
+from __future__ import annotations
+
+import sys
+
+
+def iter_ints(data: bytes):
+    """Yield integers parsed from a bytes buffer.
+
+    Args:
+        data: Entire standard input as bytes.
+
+    Yields:
+        The parsed integers in the order they appear in the input.
+    """
+    length = len(data)
+    index = 0
+
+    while index < length:
+        while index < length and data[index] <= 32:
+            index += 1
+        if index >= length:
+            return
+
+        sign = 1
+        if data[index] == 45:  # '-'
+            sign = -1
+            index += 1
+
+        value = 0
+        while index < length and 48 <= data[index] <= 57:
+            value = value * 10 + (data[index] - 48)
+            index += 1
+
+        yield sign * value
+
+
+def solve_query(
+    ones_count: int,
+    twos_count: int,
+    sun_tile_count: int,
+    half_total_value: int,
+) -> str:
+    """Answer a single query for a fixed (a, b) test case.
+
+    Args:
+        ones_count: Number of value-1 tiles (a).
+        twos_count: Number of value-2 tiles (b).
+        sun_tile_count: Required number of tiles in the Sun tray (k).
+        half_total_value: H = (a + 2b) / 2, valid only when a is even.
+
+    Returns:
+        "-1" if impossible, otherwise a string "x y".
+    """
+    total_tiles = ones_count + twos_count
+    if sun_tile_count < 0 or sun_tile_count > total_tiles:
+        return "-1"
+
+    twos_in_sun = half_total_value - sun_tile_count
+    ones_in_sun = 2 * sun_tile_count - half_total_value
+
+    if 0 <= ones_in_sun <= ones_count and 0 <= twos_in_sun <= twos_count:
+        return f"{ones_in_sun} {twos_in_sun}"
+
+    return "-1"
+
+
+def main() -> None:
+    """Read input, process all test cases, and print answers."""
+    data = sys.stdin.buffer.read()
+    integer_iterator = iter_ints(data)
+
+    test_case_count = next(integer_iterator)
+    outputs: list[str] = []
+
+    for test_case_index in range(test_case_count):
+        ones_count = next(integer_iterator)
+        twos_count = next(integer_iterator)
+        query_count = next(integer_iterator)
+
+        if ones_count % 2 != 0:
+            for query_index in range(query_count):
+                _ignored_k = next(integer_iterator)
+                outputs.append("-1")
+            continue
+
+        half_total_value = ones_count // 2 + twos_count
+
+        for query_index in range(query_count):
+            sun_tile_count = next(integer_iterator)
+            outputs.append(
+                solve_query(
+                    ones_count=ones_count,
+                    twos_count=twos_count,
+                    sun_tile_count=sun_tile_count,
+                    half_total_value=half_total_value,
+                )
+            )
+
+    sys.stdout.write("\n".join(outputs))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**4. Code Explanation**
+
+For each test case:
+
+1. If `ones_count` (which is $a$) is odd, then
+   $$H=\frac{a+2b}{2}$$
+   is not an integer, so Sun sum cannot equal Moon sum. The code outputs `-1`
+   for all queries in that test case.
+
+2. If $a$ is even, the code computes:
+   $$H=\frac{a}{2}+b$$
+   stored as `half_total_value`.
+
+3. For each query `sun_tile_count` (which is $k$), it computes the only possible
+   candidate:
+   $$y=H-k,\quad x=2k-H,$$
+   stored as `twos_in_sun` and `ones_in_sun`.
+
+4. It prints `x y` only if:
+   - $k \in [0,a+b]$
+   - $x \in [0,a]$
+   - $y \in [0,b]$  
+   Otherwise it prints `-1`.
+
+---
+
+**5. Time and Space Complexity**
+
+Let $Q$ be the total number of queries across all test cases.
+
+- Time complexity: $O(Q)$ (constant work per query).
+- Auxiliary space complexity: $O(1)$, excluding the output buffer
+  (which is $O(Q)$ to store answers before printing).
+
+---
+
+**6. Conclusion**
+
+By turning the constraints into two linear equations, each query reduces to
+computing a unique candidate $(x,y)$ and validating bounds. This yields a fast
+and reliable $O(1)$ per-query solution that works even when $a$ and $b$ are as
+large as $10^{18}$.
