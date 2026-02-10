@@ -13,12 +13,15 @@ Let $S$ be the sum of tile values in the Sun tray and $M$ the sum in the Moon tr
 
 In the query, an integer $k$ is given: **exactly $k$ tiles must be placed into the Sun tray** (so the remaining $a+b-k$ tiles go to the Moon tray).
 
-For each query you receive an integer $k$. **If $k\notin [0,a+b]$**, then it is impossible to place exactly $k$ tiles in the Sun tray (there are only $a+b$ tiles); **output $-1$** in that case. Otherwise, determine whether there exists a distribution with exactly $k$ tiles in the Sun tray and net energy $0$.
+For each query you receive an integer $k$. Handle two cases separately:
 
-Any such distribution is described by two counts: $x$ = number of value-$1$ tiles in the Sun tray, $y$ = number of value-$2$ tiles in the Sun tray. A pair $(x,y)$ is **valid** if $0 <= x <= a$, $0 <= y <= b$, $x+y=k$, and the resulting net energy is $0$.
+1. **$k\notin [0,a+b]$:** It is impossible to place exactly $k$ tiles in the Sun tray (there are only $a+b$ tiles). **Output $-1$.**
 
-- If a valid pair $(x,y)$ exists, output $x$ and $y$. Under the problem constraints (tile values $1$ and $2$, exactly $k$ in Sun) there is **at most one** valid pair per query; you must output that pair when it exists.
-- Otherwise output $-1$.
+2. **$k\in [0,a+b]$:** Placing exactly $k$ tiles in the Sun tray is possible. Determine whether net energy $0$ can be achieved with that choice. If yes, output the unique valid pair $(x,y)$ (see below); if no, output $-1$.
+
+Any distribution is described by $x$ = number of value-$1$ tiles in the Sun tray and $y$ = number of value-$2$ tiles in the Sun tray. A pair $(x,y)$ is **valid** if $0 \le x \le a$, $0 \le y \le b$, $x+y=k$, and the resulting net energy is $0$.
+
+**Guaranteed property (uniqueness):** For every query there is at most one valid pair. When the total value $a+2b$ is even, net energy $0$ forces the Sun tray sum to equal $\frac{a+2b}{2}$; then $x+y=k$ and $x+2y=\frac{a+2b}{2}$ form a $2\times 2$ linear system in $(x,y)$ with exactly one solution, and that solution is valid if and only if $0 \le x \le a$ and $0 \le y \le b$. When $a+2b$ is odd, no distribution achieves net energy $0$, so no valid pair exists. Thus the output is uniquely determined for every input; when a valid pair exists, you must output it.
 
 **Output rule (judging):** For each query there is at most one valid pair. When it exists, you must output that pair. When it does not, output $-1$. Same input must always produce the same output.
 
@@ -40,10 +43,10 @@ For each query, print:
 
 **Constraints:-**
 
-- $1 <= t <= 2*10^4$
-- $0 <= a,b <= 10^{18}$
-- $1 <= q <= 2*10^5$
-- The sum of $q$ over all test cases is at most $2*10^5$
+- $1 \le t \le 2\cdot 10^4$
+- $0 \le a,b \le 10^{18}$
+- $1 \le q \le 2\cdot 10^5$
+- The sum of $q$ over all test cases is at most $2\cdot 10^5$
 - Each query integer $k$ fits in signed 64-bit; $k$ may be any such value (if $k\notin [0,a+b]$, output $-1$ for that query)
 **Examples:-**
  - **Input:**
@@ -91,14 +94,12 @@ For each query, print:
 ```
 
 **Note:-**  
-**Why the answer is unique (optional):** Total value of all tiles is $a+2b$. For net energy $0$, Sun tray sum must equal $\frac{a+2b}{2}$, so $a$ must be even. When $k\in [0,a+b]$ and $a$ is even, the conditions $x+y=k$ and Sun sum $=x+2y=\frac{a+2b}{2}$ give a unique pair $x=2k-\frac{a+2b}{2}$, $y=\frac{a+2b}{2}-k$; it is valid iff $0 <= x <= a$ and $0 <= y <= b$. This is why the required output is deterministic.
-
 The following explains how each line of the example output is produced, in order. Here, **total value** means $a+2b$ (sum of all tile values).
 
 **Example 1.**  
 - **Test case 1:** $a=0$, $b=2$, $q=2$. Queries in input order: $k=1$, then $k=0$. Total value $a+2b=4$, so Sun tray must have sum $2$.  
   - **Output line 1** (query $k=1$): one tile in Sun with sum $2$ is only possible with one tile of value $2$: $(x,y)=(0,1)$ → `0 1`.  
-  - **Output line 2** (query $k=0$): zero tiles in Sun gives sum $0 != 2$ → `-1`.
+  - **Output line 2** (query $k=0$): zero tiles in Sun gives sum $0 \neq 2$ → `-1`.
 
 - **Test case 2:** $a=3$, $b=1$, $q=3$. Queries in input order: $k=0$, $k=2$, $k=4$. Total value $a+2b=5$ is odd, so $\frac{a+2b}{2}$ is not an integer; net energy $0$ is impossible for every $k$.  
   - **Output line 3** (query $k=0$) → `-1`.  
@@ -114,8 +115,8 @@ The following explains how each line of the example output is produced, in order
 **Example 2.**  
 - **Test case 1:** $a=4$, $b=1$, $q=6$. Queries in input order: $k=3$, $k=1$, $k=3$, $k=2$, $k=0$, $k=4$. Total value $a+2b=6$, so Sun tray must have sum $3$.  
   - **Output line 1** (query $k=3$): $x+y=3$, $x+2y=3$ → $(x,y)=(3,0)$ → `3 0`.  
-  - **Output line 2** (query $k=1$): $x+2y=3$ and $x+y=1$ give $y=2$, but $y <= b=1$ fails → `-1`.  
+  - **Output line 2** (query $k=1$): $x+2y=3$ and $x+y=1$ give $y=2$, but $y \le b=1$ fails → `-1`.  
   - **Output line 3** (query $k=3$): again $(3,0)$ → `3 0`.  
   - **Output line 4** (query $k=2$): $x+y=2$, $x+2y=3$ → $(x,y)=(1,1)$ → `1 1`.  
-  - **Output line 5** (query $k=0$): Sun sum would be $0 != 3$ → `-1`.  
+  - **Output line 5** (query $k=0$): Sun sum would be $0 \neq 3$ → `-1`.  
   - **Output line 6** (query $k=4$): $x+2y=3$ and $x+y=4$ give $y=-1$ → `-1`.
