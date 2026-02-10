@@ -15,18 +15,19 @@ $$(\text{sum in Sun tray})-(\text{sum in Moon tray})$$
 
 In the query, an integer $k$ is given: **exactly $k$ tiles must be placed into the Sun tray** (so the remaining $a+b-k$ tiles go to the Moon tray).
 
-For each query, determine whether it is possible to make the net energy exactly $0$.
+For each query you receive an integer $k$. **If $k \notin [0,a+b]$**, then it is impossible to place exactly $k$ tiles in the Sun tray (there are only $a+b$ tiles); **output $-1$** in that case. Otherwise, determine whether it is possible to make the net energy exactly $0$ with exactly $k$ tiles in the Sun tray.
 
 - If possible, output two integers $x$ and $y$:
   - $x$ = number of value-$1$ tiles placed into the Sun tray
   - $y$ = number of value-$2$ tiles placed into the Sun tray
 - Otherwise output $-1$.
 
-A distribution is **possible** if and only if there exist nonnegative integers $x$ and $y$ such that:
+**Why net energy $0$ fixes the Sun tray sum:** The total value of all tiles is $a+2b$. Every tile is in Sun or Moon, so $(\text{Sun sum})+(\text{Moon sum})=a+2b$. Net energy $0$ means $(\text{Sun sum})-(\text{Moon sum})=0$, so Sun sum equals Moon sum. Hence $2\cdot(\text{Sun sum})=a+2b$, so the Sun tray sum must equal $(a+2b)/2$. That is an integer only when $a+2b$ is even (i.e. $a$ is even).
+
+**When $k \in [0,a+b]$**, a distribution is **possible** if and only if there exist nonnegative integers $x$ and $y$ such that:
 - $x+y=k$ (exactly $k$ tiles in the Sun tray),
 - $0 \le x \le a$ and $0 \le y \le b$ (we do not use more value-$1$ or value-$2$ tiles than we have),
-- $0 \le k \le a+b$ (the query asks for a valid number of Sun tiles),
-- and the net energy is $0$ (which forces the Sun tray sum to equal $(a+2b)/2$).
+- and the Sun tray sum equals $(a+2b)/2$ (so net energy is $0$; this requires $a$ to be even).
 
 When a solution exists, the pair $(x,y)$ is uniquely determined (the conditions reduce to two linear equations in $x$ and $y$ with at most one solution). Output that unique pair; when no solution exists, output $-1$.
 
@@ -52,7 +53,7 @@ For each query, print:
 - $0 \le a,b \le 10^{18}$
 - $1 \le q \le 2 \cdot 10^5$
 - The sum of $q$ over all test cases is at most $2 \cdot 10^5$
-- Each query integer $k$ fits in signed 64-bit (if $k \notin [0,a+b]$, it is impossible)
+- Each query integer $k$ fits in signed 64-bit; $k$ may be any such value (if $k \notin [0,a+b]$, output $-1$ for that query)
 **Examples:-**
  - **Input:**
 ```

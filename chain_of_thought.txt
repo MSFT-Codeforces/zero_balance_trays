@@ -1,5 +1,5 @@
 **[section_01]**
-**Chain Title** Building a precise mental model of the task without thinking about algorithms.
+**Chain Title** Clarifying the model and constraints.
 **[atomic_01_01]**
 Each test case specifies a multiset of tiles with only two possible values: there are exactly $a$ tiles of value $1$ and exactly $b$ tiles of value $2$. Tiles of the same value are interchangeable, so the only meaningful choices are how many of each value go to each tray.
 **[atomic_01_02]**
@@ -96,7 +96,7 @@ Despite being fast enough, binary search is still more complicated than necessar
 ---
 
 **[section_06]**
-**Chain Title** Deriving a closed-form solution from the linear system.
+**Chain Title** Solving the equations to get a direct formula.
 **[atomic_06_01]**
 Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
 $$x+y=k.$$
