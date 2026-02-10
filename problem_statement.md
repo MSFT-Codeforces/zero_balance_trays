@@ -24,7 +24,7 @@ For each query you receive an integer $k$. **If $k$ is not in $[0,a+b]$**, then 
 
 **When $k$ is in $[0,a+b]$**, the Sun tray has sum $x+2y$ (since it contains $x$ tiles of value $1$ and $y$ tiles of value $2$). For net energy $0$ we need $x+2y=(a+2b)/2$, and we also need $x+y=k$. These two linear equations in $x$ and $y$ have exactly one solution when $(a+2b)/2$ is an integer, i.e. $a$ is even: subtracting $x+y=k$ from $x+2y=(a+2b)/2$ gives $y=(a+2b)/2-k$, and then $x=k-y=2k-(a+2b)/2$. So the **only candidate** pair is
 $$x=2k-(a+2b)/2, y=(a+2b)/2-k.$$
-A distribution is **possible** if and only if $a$ is even and this candidate satisfies $0 <= x <= a$ and $0 <= y <= b$. **Output** this pair when it is valid; otherwise output $-1$. The output is therefore deterministic for every input.
+A distribution is **possible** if and only if $a$ is even and this candidate satisfies $0 <= x <= a$ and $0 <= y <= b$. When valid, this is the **only** pair $(x,y)$ that satisfies the rules; you must output this pair. When invalid, output $-1$.
 
 Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
 
@@ -95,26 +95,26 @@ For each query, print:
 ```
 
 **Note:-**  
-The following explains how each line of the example output is produced, in order.
+The following explains how each line of the example output is produced, in order. Here, **total value** means $a+2b$ (sum of all tile values).
 
 **Example 1.**  
-- **Test case 1:** $a=0$, $b=2$, $q=2$. Queries in input order: $k=1$, then $k=0$. $S=a+2b=4$, so Sun tray must have sum $2$.  
+- **Test case 1:** $a=0$, $b=2$, $q=2$. Queries in input order: $k=1$, then $k=0$. Total value $a+2b=4$, so Sun tray must have sum $2$.  
   - **Output line 1** (query $k=1$): one tile in Sun with sum $2$ is only possible with one tile of value $2$: $(x,y)=(0,1)$ → `0 1`.  
   - **Output line 2** (query $k=0$): zero tiles in Sun gives sum $0 != 2$ → `-1`.
 
-- **Test case 2:** $a=3$, $b=1$, $q=3$. Queries in input order: $k=0$, $k=2$, $k=4$. $S=5$ is odd, so $S/2$ is not an integer; net energy $0$ is impossible for every $k$.  
+- **Test case 2:** $a=3$, $b=1$, $q=3$. Queries in input order: $k=0$, $k=2$, $k=4$. Total value $a+2b=5$ is odd, so $(a+2b)/2$ is not an integer; net energy $0$ is impossible for every $k$.  
   - **Output line 3** (query $k=0$) → `-1`.  
   - **Output line 4** (query $k=2$) → `-1`.  
   - **Output line 5** (query $k=4$) → `-1`.
 
-- **Test case 3:** $a=2$, $b=3$, $q=4$. Queries in input order: $k=1$, $k=2$, $k=3$, $k=4$ (given on two lines in the input). $S=8$, so Sun tray must have sum $4$; we need $x+y=k$ and $x+2y=4$.  
+- **Test case 3:** $a=2$, $b=3$, $q=4$. Queries in input order: $k=1$, $k=2$, $k=3$, $k=4$ (given on two lines in the input). Total value $a+2b=8$, so Sun tray must have sum $4$; we need $x+y=k$ and $x+2y=4$.  
   - **Output line 6** (query $k=1$): max Sun sum with one tile is $2<4$ → `-1`.  
   - **Output line 7** (query $k=2$): $y=2$, $x=0$; bounds hold → `0 2`.  
   - **Output line 8** (query $k=3$): $y=1$, $x=2$ → `2 1`.  
   - **Output line 9** (query $k=4$): $y=0$, $x=4$ but $x>a=2$ → `-1`.
 
 **Example 2.**  
-- **Test case 1:** $a=4$, $b=1$, $q=6$. Queries in input order: $k=3$, $k=1$, $k=3$, $k=2$, $k=0$, $k=4$. $S=6$, so Sun tray must have sum $3$.  
+- **Test case 1:** $a=4$, $b=1$, $q=6$. Queries in input order: $k=3$, $k=1$, $k=3$, $k=2$, $k=0$, $k=4$. Total value $a+2b=6$, so Sun tray must have sum $3$.  
   - **Output line 1** (query $k=3$): $x+y=3$, $x+2y=3$ → $(x,y)=(3,0)$ → `3 0`.  
   - **Output line 2** (query $k=1$): $x+2y=3$ and $x+y=1$ give $y=2$, but $y <= b=1$ fails → `-1`.  
   - **Output line 3** (query $k=3$): again $(3,0)$ → `3 0`.  
