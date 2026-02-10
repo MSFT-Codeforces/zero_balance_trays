@@ -78,19 +78,21 @@ This is a clear improvement over exponential brute force, but it still relies on
 **[section_05]**
 **Chain Title** Exploring binary search on a monotone function.
 **[atomic_05_01]**
-With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
+**Why this approach over CHAIN04:** CHAIN04 enumerates all $x$ in the feasible interval, giving $O(\min(a,k))$ work per query, which is infeasible when $a$ or $k$ is large (e.g. up to $10^{18}$). We therefore look for a way to avoid scanning: the net energy, as a function of $x$ (with $y=k-x$), is linear and hence monotone, so we can binary search for the unique zero instead of iterating over every candidate. That is why we introduce binary search here rather than stick with linear enumeration.
 **[atomic_05_02]**
-When substituting $y=k-x$, the net energy expression becomes linear in $x$, meaning it changes in a single direction as $x$ increases (monotonic behavior). This is important because it lets us locate a zero (if it exists) without scanning every $x$.
+With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
 **[atomic_05_03]**
+When substituting $y=k-x$, the net energy expression becomes linear in $x$, meaning it changes in a single direction as $x$ increases (monotonic behavior). This is important because it lets us locate a zero (if it exists) without scanning every $x$.
+**[atomic_05_04]**
 Given monotonicity over the feasible interval
 $$x \in [L,R]=[\max(0,k-b),\min(a,k)],$$
 we can binary search for an $x$ where net energy is $0$. After binary search selects a candidate $x$, we compute $y=k-x$ and verify all constraints. This replaces $O(R-L+1)$ scanning with $O(\log(R-L+1))$ checks.
-**[atomic_05_04]**
+**[atomic_05_05]**
 Complexity improves to:
 - Time per query: $O(\log(\min(a,k)+1))$,
 - Space: $O(1)$.
 This is strictly better than the linear scan from the previous approach.
-**[atomic_05_05]**
+**[atomic_05_06]**
 Despite being fast enough, binary search is still more complicated than necessary: the function is not just monotone, it is exactly linear, and the problem guarantees uniqueness when a solution exists. That suggests there should be a direct algebraic way to compute $(x,y)$ without any searching, motivating a final refinement to $O(1)$ per query.
 
 ---
@@ -98,14 +100,16 @@ Despite being fast enough, binary search is still more complicated than necessar
 **[section_06]**
 **Chain Title** Solving the equations to get a direct formula.
 **[atomic_06_01]**
+**Why this approach over CHAIN05:** CHAIN05 achieves $O(\log(\min(a,k)+1))$ per query via binary search, which is fast enough for the constraints, but it requires implementing a search loop and multiple evaluations of the net-energy expression. The constraints in $x$ and $y$ form a linear system with at most one solution; we can solve that system in closed form and obtain $(x,y)$ with a few arithmetic operations. We therefore prefer the closed-form solution here: it gives $O(1)$ per query with simpler code and no search, and it makes the uniqueness of the answer explicit.
+**[atomic_06_02]**
 Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
 $$x+y=k.$$
-**[atomic_06_02]**
+**[atomic_06_03]**
 Net energy equals:
 $$(\text{Sun sum})-(\text{Moon sum}).$$
 Ones contribute $x-(a-x)=2x-a$ and twos contribute $2y-2(b-y)=4y-2b$, so net energy $0$ implies:
 $$(2x-a)+(4y-2b)=0.$$
-**[atomic_06_03]**
+**[atomic_06_04]**
 Rearrange:
 $$2x+4y=a+2b,$$
 divide by $2$:
@@ -113,9 +117,9 @@ $$x+2y=\frac{a+2b}{2}.$$
 Let:
 $$H=\frac{a+2b}{2}.$$
 A necessary condition is that $H$ is an integer, which happens exactly when $a$ is even.
-**[atomic_06_04]**
-If $a$ is odd, then $H$ is not an integer, so no solution can exist for any query in that test case. Every query output is $-1$, and we only need to consume the input values of $k$.
 **[atomic_06_05]**
+If $a$ is odd, then $H$ is not an integer, so no solution can exist for any query in that test case. Every query output is $-1$, and we only need to consume the input values of $k$.
+**[atomic_06_06]**
 Assume $a$ is even. Then:
 $$H=\frac{a}{2}+b.$$
 Solve the system:
@@ -128,17 +132,17 @@ $$y=H-k,$$
 and then:
 $$x=k-y=2k-H.$$
 This produces exactly one candidate pair $(x,y)$ for each query.
-**[atomic_06_06]**
+**[atomic_06_07]**
 The candidate is feasible if and only if all bounds are satisfied:
 - $0 \le k \le a+b$,
 - $0 \le x \le a$,
 - $0 \le y \le b$.
 If any bound fails, the unique candidate is invalid, so the answer must be $-1$.
-**[atomic_06_07]**
-Per-query time is $O(1)$: a few integer operations and comparisons. Space remains $O(1)$ besides storing output. This strictly improves upon the $O(\log n)$ binary search approach.
 **[atomic_06_08]**
-This constant-time approach also aligns with the uniqueness guarantee: since there is at most one solution, it is sufficient to compute the only possible candidate and validate it, rather than search among many possibilities.
+Per-query time is $O(1)$: a few integer operations and comparisons. Space remains $O(1)$ besides storing output. This strictly improves upon the $O(\log n)$ binary search approach.
 **[atomic_06_09]**
+This constant-time approach also aligns with the uniqueness guarantee: since there is at most one solution, it is sufficient to compute the only possible candidate and validate it, rather than search among many possibilities.
+**[atomic_06_10]**
 **Corner cases and revision of reasoning:** Do any corner cases force us to revise this approach? $a$ odd: no revision—we never use the formula; we output $-1$ for every query in that test case, so the closed-form derivation is simply not applied. $k=0$ or $k=a+b$: the same candidate $(x,y)=(2k-H,\,H-k)$ and the same bounds $0\le x\le a$, $0\le y\le b$ apply; we only need to ensure the implementation checks these bounds (e.g. $k=0$ gives $y=H$, $x=-H$, which fails if $H>0$). $a=0$ or $b=0$: again the same formula and bounds apply; when $a=0$ we must have $x=0$, and the bounds check $0\le x\le a$ enforces that; when $b=0$, $0\le y\le b$ forces $y=0$. Large $a,b$ up to $10^{18}$: the derivation uses only integer arithmetic and comparisons; no loop or array is involved, so no revision. None of these corner cases require a different algorithm or a second pass; the single formula plus bounds check suffices.
 
 ---

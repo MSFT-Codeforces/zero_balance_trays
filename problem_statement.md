@@ -22,9 +22,9 @@ For each query you receive an integer $k$. **If $k \notin [0,a+b]$**, then it is
   - $y$ = number of value-$2$ tiles placed into the Sun tray
 - Otherwise output $-1$.
 
-**Why net energy $0$ fixes the Sun tray sum:** The total value of all tiles is $a+2b$. Every tile is in Sun or Moon, so $(\text{Sun sum})+(\text{Moon sum})=a+2b$. Net energy $0$ means $(\text{Sun sum})-(\text{Moon sum})=0$, so Sun sum equals Moon sum. Hence $2\cdot(\text{Sun sum})=a+2b$, so the Sun tray sum must equal $(a+2b)/2$. That is an integer only when $a+2b$ is even (i.e. $a$ is even).
+**Why net energy $0$ fixes the Sun tray sum:** The total value of all tiles is $a+2b$. Every tile is in Sun or Moon, so $(\text{Sun sum})+(\text{Moon sum})=a+2b$. Net energy $0$ means $(\text{Sun sum})-(\text{Moon sum})=0$, so $\text{Sun sum}=\text{Moon sum}$. Hence $2\cdot(\text{Sun sum})=a+2b$, so the Sun tray sum must equal $(a+2b)/2$. That is an integer only when $a+2b$ is even, i.e. $a$ is even.
 
-**When $k \in [0,a+b]$**, the Sun tray has sum $x+2y$ (since it contains $x$ tiles of value $1$ and $y$ tiles of value $2$). For net energy $0$ we need $x+2y=(a+2b)/2$, and we also need $x+y=k$. These two linear equations in $x$ and $y$ have exactly one solution when $(a+2b)/2$ is an integer (i.e. $a$ is even): subtracting $x+y=k$ from $x+2y=(a+2b)/2$ gives $y=(a+2b)/2-k$, and then $x=k-y=2k-(a+2b)/2$. So the **only candidate** pair is
+**When $k \in [0,a+b]$**, the Sun tray has sum $x+2y$ (since it contains $x$ tiles of value $1$ and $y$ tiles of value $2$). For net energy $0$ we need $x+2y=(a+2b)/2$, and we also need $x+y=k$. These two linear equations in $x$ and $y$ have exactly one solution when $(a+2b)/2$ is an integer, i.e. $a$ is even: subtracting $x+y=k$ from $x+2y=(a+2b)/2$ gives $y=(a+2b)/2-k$, and then $x=k-y=2k-(a+2b)/2$. So the **only candidate** pair is
 $$x=2k-(a+2b)/2,\qquad y=(a+2b)/2-k.$$
 A distribution is **possible** if and only if $a$ is even and this candidate satisfies $0 \le x \le a$ and $0 \le y \le b$. **Output** this pair when it is valid; otherwise output $-1$. The output is therefore deterministic for every input.
 
