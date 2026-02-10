@@ -26,14 +26,14 @@ If it is not solvable, output $-1$. The two constraints (exactly $k$ in Sun and 
 **[section_02]**
 **Chain Title** Walking through the provided sample test cases from the problem statement.
 **[atomic_02_01]**
-**First sample (first example in the statement.)** Input:
+**Example 1.** Input:
 $t=3$. Test case 1: $a=0$, $b=2$, $q=2$ with $k=1$ then $k=0$. Total value $S=a+2b=4$, so net energy $0$ requires Sun sum $=S/2=2$. For $k=1$: we need one tile in Sun with sum $2$; the only possibility is one tile of value $2$, so $x=0$, $y=1$ → output `0 1`. For $k=0$: zero tiles in Sun gives Sun sum $0 \neq 2$ → output `-1`. So the first two lines of output are `0 1` and `-1`.
 **[atomic_02_02]**
 **First sample, test case 2.** $a=3$, $b=1$, $q=3$ with $k=0$, $k=2$, $k=4$. Here $S=3+2=5$ is odd, so $S/2$ is not an integer and net energy $0$ is impossible for every $k$. All three queries must output `-1`. That matches the statement output: `-1`, `-1`, `-1`.
 **[atomic_02_03]**
 **First sample, test case 3.** $a=2$, $b=3$, $q=4$ with $k=1$, $k=2$, $k=3$, $k=4$. $S=2+6=8$, so Sun sum must be $4$. We need $x+y=k$ and $x+2y=4$. $k=1$: max Sun sum with one tile is $2<4$ → `-1`. $k=2$: $y=2$, $x=0$; check $0\le x\le 2$, $0\le y\le 3$ → output `0 2`. $k=3$: $y=1$, $x=2$ → output `2 1`. $k=4$: $y=0$, $x=4$ but $x\le a=2$ fails → `-1`. So the four outputs are `-1`, `0 2`, `2 1`, `-1`, matching the statement.
 **[atomic_02_04]**
-**Second sample (second example in the statement.)** Single test case: $a=4$, $b=1$, $q=6$, queries $k=3,1,3,2,0,4$. $S=4+2=6$, Sun sum must be $3$. $k=3$: $x+y=3$, $x+2y=3$ → $y=0$, $x=3$; $0\le x\le 4$, $0\le y\le 1$ → `3 0`. $k=1$: $x+y=1$, $x+2y=3$ → $y=2$ but $y\le b=1$ fails → `-1`. $k=3$ again → `3 0`. $k=2$: $x+y=2$, $x+2y=3$ → $y=1$, $x=1$ → `1 1`. $k=0$: Sun sum $0\neq 3$ → `-1`. $k=4$: $x+y=4$, $x+2y=3$ gives $y=-1$ → `-1`. So the six outputs are `3 0`, `-1`, `3 0`, `1 1`, `-1`, `-1`, matching the statement.
+**Example 2.** Single test case: $a=4$, $b=1$, $q=6$, queries $k=3,1,3,2,0,4$. $S=4+2=6$, Sun sum must be $3$. $k=3$: $x+y=3$, $x+2y=3$ → $y=0$, $x=3$; $0\le x\le 4$, $0\le y\le 1$ → `3 0`. $k=1$: $x+y=1$, $x+2y=3$ → $y=2$ but $y\le b=1$ fails → `-1`. $k=3$ again → `3 0`. $k=2$: $x+y=2$, $x+2y=3$ → $y=1$, $x=1$ → `1 1`. $k=0$: Sun sum $0\neq 3$ → `-1`. $k=4$: $x+y=4$, $x+2y=3$ gives $y=-1$ → `-1`. So the six outputs are `3 0`, `-1`, `3 0`, `1 1`, `-1`, `-1`, matching the statement.
 **[atomic_02_05]**
 These walkthroughs confirm that the stated inputs produce the stated outputs and illustrate: (1) $a=0$ with only value-$2$ tiles, (2) odd total sum so no query can succeed, (3) feasible and infeasible $k$ in the same test case with bounds $0\le x\le a$, $0\le y\le b$, and (4) repeated $k$ and ordering of queries. This chain does not describe an algorithmic approach; it only verifies the samples. There is no asymptotic cost to discuss here.
 

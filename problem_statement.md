@@ -97,23 +97,29 @@ For each query, print:
 ```
 
 **Note:-**  
-In the first example, **test case 1** has $a=0$, $b=2$. The total sum is $S=a+2b=4$, so the Sun tray must have sum $S/2=2$.  
-- For $k=1$, the only way to get sum $2$ using exactly one tile is to place one "2" in Sun: $(x,y)=(0,1)$.  
-- For $k=0$, Sun sum would be $0\ne 2$, so it is impossible.
+The following explains how each line of the example output is produced, in order.
 
-In the first example, **test case 2** has $a=3$, $b=1$, so $S=a+2b=5$ is odd. Since $S/2$ is not an integer, net energy $0$ cannot be achieved for any $k$, hence all queries output $-1$.
+**Example 1.**  
+- **Test case 1:** $a=0$, $b=2$, $q=2$. Queries in input order: $k=1$, then $k=0$. $S=a+2b=4$, so Sun tray must have sum $2$.  
+  - **Output line 1** (query $k=1$): one tile in Sun with sum $2$ is only possible with one tile of value $2$: $(x,y)=(0,1)$ → `0 1`.  
+  - **Output line 2** (query $k=0$): zero tiles in Sun gives sum $0\ne 2$ → `-1`.
 
-In the first example, **test case 3** has $a=2$, $b=3$, so $S=a+2b=8$ and the Sun tray must have sum $S/2=4$. For each query we need
-$$x+y=k,\quad x+2y=4.$$
-- $k=1$ gives maximum Sun sum $2$, so impossible.  
-- $k=2$ gives $y=2$, $x=0$, so output $0\ 2$.  
-- $k=3$ gives $y=1$, $x=2$, so output $2\ 1$.  
-- $k=4$ gives $y=0$, $x=4$ but $x>a=2$, so impossible.
+- **Test case 2:** $a=3$, $b=1$, $q=3$. Queries in input order: $k=0$, $k=2$, $k=4$. $S=5$ is odd, so $S/2$ is not an integer; net energy $0$ is impossible for every $k$.  
+  - **Output line 3** (query $k=0$) → `-1`.  
+  - **Output line 4** (query $k=2$) → `-1`.  
+  - **Output line 5** (query $k=4$) → `-1`.
 
-In the first example, **test case 1** of the second sample has $a=4$, $b=1$, so $S=a+2b=6$ and the Sun tray must have sum $S/2=3$.  
-- $k=3$: solving $x+y=3$ and $x+2y=3$ gives $(x,y)=(3,0)$.  
-- $k=1$: would require $y=2$ (not possible since $b=1$), so $-1$.  
-- $k=3$ again gives $(3,0)$.  
-- $k=2$: solving gives $(x,y)=(1,1)$.  
-- $k=0$: Sun sum would be $0\ne 3$, so $-1$.  
-- $k=4$: solving forces $y<0$, so $-1$.
+- **Test case 3:** $a=2$, $b=3$, $q=4$. Queries in input order: $k=1$, $k=2$, $k=3$, $k=4$ (given on two lines in the input). $S=8$, so Sun tray must have sum $4$; we need $x+y=k$ and $x+2y=4$.  
+  - **Output line 6** (query $k=1$): max Sun sum with one tile is $2<4$ → `-1`.  
+  - **Output line 7** (query $k=2$): $y=2$, $x=0$; bounds hold → `0 2`.  
+  - **Output line 8** (query $k=3$): $y=1$, $x=2$ → `2 1`.  
+  - **Output line 9** (query $k=4$): $y=0$, $x=4$ but $x>a=2$ → `-1`.
+
+**Example 2.**  
+- **Test case 1:** $a=4$, $b=1$, $q=6$. Queries in input order: $k=3$, $k=1$, $k=3$, $k=2$, $k=0$, $k=4$. $S=6$, so Sun tray must have sum $3$.  
+  - **Output line 1** (query $k=3$): $x+y=3$, $x+2y=3$ → $(x,y)=(3,0)$ → `3 0`.  
+  - **Output line 2** (query $k=1$): $x+2y=3$ and $x+y=1$ give $y=2$, but $y\le b=1$ fails → `-1`.  
+  - **Output line 3** (query $k=3$): again $(3,0)$ → `3 0`.  
+  - **Output line 4** (query $k=2$): $x+y=2$, $x+2y=3$ → $(x,y)=(1,1)$ → `1 1`.  
+  - **Output line 5** (query $k=0$): Sun sum would be $0\ne 3$ → `-1`.  
+  - **Output line 6** (query $k=4$): $x+2y=3$ and $x+y=4$ give $y=-1$ → `-1`.
