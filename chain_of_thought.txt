@@ -1,5 +1,5 @@
 **[section_01]**
-Building a precise mental model of the task without thinking about algorithms.
+**Chain Title** Building a precise mental model of the task without thinking about algorithms.
 **[atomic_01_01]**
 Each test case specifies a multiset of tiles with only two possible values: there are exactly $a$ tiles of value $1$ and exactly $b$ tiles of value $2$. Tiles of the same value are interchangeable, so the only meaningful choices are how many of each value go to each tray.
 **[atomic_01_02]**
@@ -19,7 +19,7 @@ When a query is solvable, the output must be two integers $(x,y)$:
 - $x$ is the count of value-$1$ tiles placed in Sun,
 - $y$ is the count of value-$2$ tiles placed in Sun.
 
-If it is not solvable, output $-1$. The statement also guarantees that for a fixed $(a,b,k)$, if a solution exists then this pair $(x,y)$ is unique.
+If it is not solvable, output $-1$. The two constraints (exactly $k$ in Sun and net energy $0$) form a linear system in $(x,y)$ with at most one solution when consistent, so the output is deterministic.
 
 ---
 
@@ -40,7 +40,7 @@ These walkthroughs confirm that the stated inputs produce the stated outputs and
 ---
 
 **[section_03]**
-Implementing brute-force tray assignments to confirm it is impossible under the constraints.
+**Chain Title** Implementing brute-force tray assignments to confirm it is impossible under the constraints.
 **[atomic_03_01]**
 The most direct attempt is to decide for each of the $a+b$ tiles whether it goes to Sun or Moon, then check whether (1) exactly $k$ tiles were placed into Sun and (2) net energy equals $0$. This mirrors the statement exactly and is straightforward for tiny inputs.
 **[atomic_03_02]**
@@ -53,7 +53,7 @@ Because $a$ and $b$ can be as large as $10^{18}$, any method that treats each ti
 ---
 
 **[section_04]**
-Iterating over feasible $(x,y)$ counts per query and identifying why it still times out.
+**Chain Title** Iterating over feasible $(x,y)$ counts per query and identifying why it still times out.
 **[atomic_04_01]**
 Since there are only values $1$ and $2$, any placement is determined by counts:
 - choose $x$ ones for Sun (so $a-x$ ones are in Moon),
@@ -76,7 +76,7 @@ This is a clear improvement over exponential brute force, but it still relies on
 ---
 
 **[section_05]**
-Using monotonicity to binary search the unique candidate and reducing per-query work to logarithmic time.
+**Chain Title** Using monotonicity to binary search the unique candidate and reducing per-query work to logarithmic time.
 **[atomic_05_01]**
 With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
 **[atomic_05_02]**
@@ -96,7 +96,7 @@ Despite being fast enough, binary search is still more complicated than necessar
 ---
 
 **[section_06]**
-Solving the constraints as a linear system to answer each query in constant time.
+**Chain Title** Solving the constraints as a linear system to answer each query in constant time.
 **[atomic_06_01]**
 Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
 $$x+y=k.$$
@@ -142,7 +142,7 @@ This constant-time approach also aligns with the uniqueness guarantee: since the
 ---
 
 **[section_07]**
-Translating the constant-time math into an input/output plan and validating with focused checks.
+**Chain Title** Translating the constant-time math into an input/output plan and validating with focused checks.
 **[atomic_07_01]**
 Because total queries across all test cases can be $2\cdot 10^5$, input reading should avoid per-integer overhead where possible, and output should be buffered. The critical requirement is to process each query with a constant amount of work.
 **[atomic_07_02]**

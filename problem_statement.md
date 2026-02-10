@@ -22,7 +22,7 @@ For each query, determine whether it is possible to make the net energy exactly 
   - $y$ = number of value-$2$ tiles placed into the Sun tray
 - Otherwise output $-1$.
 
-It is guaranteed that for fixed $(a,b,k)$, when a solution exists the pair $(x,y)$ is unique. In that case output that unique pair; when no solution exists, output $-1$. (The guarantee ensures that you will never be given inputs where multiple valid $(x,y)$ exist for the same query.)
+For fixed $(a,b,k)$, the conditions “exactly $k$ tiles in Sun” and “net energy $0$” reduce to two linear equations in $x$ and $y$ ($x+y=k$ and Sun sum $= (a+2b)/2$). That system has at most one solution when consistent, so when a solution exists the pair $(x,y)$ is uniquely determined. Output that unique pair; when no solution exists, output $-1$. Thus the required output is deterministic for every valid input.
 
 Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
 
