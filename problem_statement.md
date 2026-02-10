@@ -32,8 +32,6 @@ When a solution exists, the pair $(x,y)$ is uniquely determined (the conditions 
 
 Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
 
-XXX “exactly $k$ tiles in Sun” and “net energy $0$” reduce to two linear equations in $x$ and $y$ ($x+y=k$ and Sun sum $= (a+2b)/2$). That system has at most one solution when consistent, so when a solution exists the pair $(x,y)$ is uniquely determined. Output that unique pair; when no solution exists, output $-1$. Thus the required output is deterministic for every valid input.
-
 **Input Format:-**
 
 The first line contains an integer $t$ — the number of test cases.
