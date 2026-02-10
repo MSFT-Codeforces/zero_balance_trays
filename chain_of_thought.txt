@@ -12,7 +12,7 @@ No tile can be discarded or duplicated.
 A query provides an integer $k$ with the rule: exactly $k$ tiles must be placed into the Sun tray. Therefore, exactly $a+b-k$ tiles are forced into the Moon tray. If $k$ is not in the range $[0,a+b]$, the query is invalid under the rules.
 **[atomic_01_04]**
 After placing all tiles, the net energy is computed as:
-$$(\text{sum of values in Sun})-(\text{sum of values in Moon}).$$
+$$\text{Sun sum}-\text{Moon sum}.$$
 The query asks whether the net energy can be made exactly $0$ while still placing exactly $k$ tiles in Sun.
 **[atomic_01_05]**
 When a query is solvable, the output must be two integers $(x,y)$:
@@ -98,7 +98,7 @@ Despite being fast enough, binary search is still more complicated than necessar
 ---
 
 **[section_06]**
-**Chain Title** Solving the equations to get a direct formula.
+**Chain Title** Deriving a closed-form solution from the linear system in $x$ and $y$.
 **[atomic_06_01]**
 **Why this approach over CHAIN05:** CHAIN05 achieves $O(\log(\min(a,k)+1))$ per query via binary search, which is fast enough for the constraints, but it requires implementing a search loop and multiple evaluations of the net-energy expression. The constraints in $x$ and $y$ form a linear system with at most one solution; we can solve that system in closed form and obtain $(x,y)$ with a few arithmetic operations. We therefore prefer the closed-form solution here: it gives $O(1)$ per query with simpler code and no search, and it makes the uniqueness of the answer explicit.
 **[atomic_06_02]**
@@ -106,7 +106,7 @@ Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$
 $$x+y=k.$$
 **[atomic_06_03]**
 Net energy equals:
-$$(\text{Sun sum})-(\text{Moon sum}).$$
+$$\text{Sun sum}-\text{Moon sum}.$$
 Ones contribute $x-(a-x)=2x-a$ and twos contribute $2y-2(b-y)=4y-2b$, so net energy $0$ implies:
 $$(2x-a)+(4y-2b)=0.$$
 **[atomic_06_04]**
@@ -148,7 +148,7 @@ This constant-time approach also aligns with the uniqueness guarantee: since the
 ---
 
 **[section_07]**
-**Chain Title** Translating the constant-time math into an input/output plan and validating with focused checks.
+**Chain Title** Outlining an input/output plan and validating correctness with focused checks.
 **[atomic_07_01]**
 **Data structures and I/O, linked to constraints:** The sum of $q$ over all test cases is at most $2\cdot 10^5$, and $t\le 2\cdot 10^4$, so we read and write on the order of $2\cdot 10^5$ integers. If each read or write incurs large per-call overhead (e.g. unbuffered sys.stdin/sys.stdout in Python), total I/O time can dominate and risk TLE. The reasoned choice is to use buffered I/O (e.g. reading lines or batches, and collecting output in a list or buffer before flushing) so that I/O cost stays linear in the number of integers and does not multiply by per-call overhead. No additional data structures (no segment tree, no precomputed tables, no extra arrays) are needed: each query is $O(1)$ and we only store $a,b,q,H$ and the current $k$ per test case, so $O(1)$ auxiliary space. The constraints (bounded total $q$, no update operations) justify this minimal setup rather than any heavier structure.
 **[atomic_07_02]**
