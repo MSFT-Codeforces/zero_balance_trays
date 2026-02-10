@@ -138,13 +138,15 @@ If any bound fails, the unique candidate is invalid, so the answer must be $-1$.
 Per-query time is $O(1)$: a few integer operations and comparisons. Space remains $O(1)$ besides storing output. This strictly improves upon the $O(\log n)$ binary search approach.
 **[atomic_06_08]**
 This constant-time approach also aligns with the uniqueness guarantee: since there is at most one solution, it is sufficient to compute the only possible candidate and validate it, rather than search among many possibilities.
+**[atomic_06_09]**
+**Corner cases and revision of reasoning:** Do any corner cases force us to revise this approach? $a$ odd: no revision—we never use the formula; we output $-1$ for every query in that test case, so the closed-form derivation is simply not applied. $k=0$ or $k=a+b$: the same candidate $(x,y)=(2k-H,\,H-k)$ and the same bounds $0\le x\le a$, $0\le y\le b$ apply; we only need to ensure the implementation checks these bounds (e.g. $k=0$ gives $y=H$, $x=-H$, which fails if $H>0$). $a=0$ or $b=0$: again the same formula and bounds apply; when $a=0$ we must have $x=0$, and the bounds check $0\le x\le a$ enforces that; when $b=0$, $0\le y\le b$ forces $y=0$. Large $a,b$ up to $10^{18}$: the derivation uses only integer arithmetic and comparisons; no loop or array is involved, so no revision. None of these corner cases require a different algorithm or a second pass; the single formula plus bounds check suffices.
 
 ---
 
 **[section_07]**
 **Chain Title** Translating the constant-time math into an input/output plan and validating with focused checks.
 **[atomic_07_01]**
-Because total queries across all test cases can be $2\cdot 10^5$, input reading should avoid per-integer overhead where possible, and output should be buffered. The critical requirement is to process each query with a constant amount of work.
+**Data structures and I/O, linked to constraints:** The sum of $q$ over all test cases is at most $2\cdot 10^5$, and $t\le 2\cdot 10^4$, so we read and write on the order of $2\cdot 10^5$ integers. If each read or write incurs large per-call overhead (e.g. unbuffered sys.stdin/sys.stdout in Python), total I/O time can dominate and risk TLE. The reasoned choice is to use buffered I/O (e.g. reading lines or batches, and collecting output in a list or buffer before flushing) so that I/O cost stays linear in the number of integers and does not multiply by per-call overhead. No additional data structures (no segment tree, no precomputed tables, no extra arrays) are needed: each query is $O(1)$ and we only store $a,b,q,H$ and the current $k$ per test case, so $O(1)$ auxiliary space. The constraints (bounded total $q$, no update operations) justify this minimal setup rather than any heavier structure.
 **[atomic_07_02]**
 A robust per-test-case sequence is:
 1) read $a,b,q$ and compute $\text{total}=a+b$,  
@@ -166,10 +168,11 @@ ok = (0 <= k <= a + b and 0 <= x <= a and 0 <= y <= b)
 This highlights that there is no loop over candidates and no search.
 **[atomic_07_05]**
 Targeted correctness checks (as test ideas) include:
-- $a$ odd: confirm all outputs are $-1$.
-- $k=0$ and $k=a+b$: verify bounds behave correctly at extremes.
-- $a=0$ or $b=0$: confirm the computed solution respects the forced $x=0$ or $y=0$ constraint when feasible.
-- large values near $10^{18}$: confirm the logic depends only on integer arithmetic and comparisons.
+- $a$ odd: confirm all outputs are $-1$ (no revision to the algorithm; we only skip the formula).
+- $k=0$ and $k=a+b$: verify bounds behave correctly at extremes (same formula and bounds; no special branch needed).
+- $a=0$ or $b=0$: confirm the computed solution respects the forced $x=0$ or $y=0$ constraint when feasible (bounds check alone suffices; no revision).
+- large values near $10^{18}$: confirm the logic depends only on integer arithmetic and comparisons (no overflow or extra structure needed).
+These checks validate that the single formula plus bounds cover all corner cases without requiring us to revise earlier reasoning.
 **[atomic_07_06]**
 Final complexity summary:
 - Approach progression: $O(2^{a+b}) \to O(\min(a,k)) \to O(\log(\min(a,k)+1)) \to O(1)$ per query.
