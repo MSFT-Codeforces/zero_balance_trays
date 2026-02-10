@@ -1,5 +1,5 @@
 **[section_01]**  
-Building a precise mental model of the task without thinking about algorithms.
+**Chain Title:** Build a precise mental model of the task without thinking about algorithms.
 
 **[atomic_01_01]**  
 Each test case specifies a multiset of tiles with only two possible values: there are exactly $a$ tiles of value $1$ and exactly $b$ tiles of value $2$. Tiles of the same value are interchangeable, so the only meaningful choices are how many of each value go to each tray.
@@ -26,38 +26,48 @@ When a query is solvable, the output must be two integers $(x,y)$:
 
 If it is not solvable, output $-1$. The statement also guarantees that for a fixed $(a,b,k)$, if a solution exists then this pair $(x,y)$ is unique.
 
+Time complexity: This chain formalizes the specification and does not propose an algorithm; no asymptotic runtime complexity applies. We treat complexity as not applicable (NA) for this chain.
+
 ---
 
 **[section_02]**  
-Listing test cases and edge cases that must be handled correctly (no solution methods discussed).
+**Chain Title:** Walk through the statement's sample test cases and list edge scenarios for later validation.
 
 **[atomic_02_01]**  
-Queries with $k<0$ or $k>a+b$ must always output $-1$ because the query requests an impossible number of Sun tiles.
+**First sample (problem statement Example 1).** Three test cases. Test case 1: $a=0$, $b=2$, $S=4$, Sun sum must be $2$. Query $k=1$: one tile in Sun with sum $2$ ⇒ one "2" in Sun, so $(x,y)=(0,1)$. Query $k=0$: Sun sum $0\ne 2$ ⇒ $-1$. Test case 2: $a=3$, $b=1$, $S=5$ odd ⇒ $S/2$ not integer, all queries $-1$. Test case 3: $a=2$, $b=3$, $S=8$, Sun sum $4$. $k=1$ max Sun sum $2$ ⇒ $-1$; $k=2$ ⇒ $(0,2)$; $k=3$ ⇒ $(2,1)$; $k=4$ ⇒ $x=4>a$ ⇒ $-1$. Outputs: $0\ 1$, $-1$, $-1$, $-1$, $-1$, $-1$, $0\ 2$, $2\ 1$, $-1$.
 
 **[atomic_02_02]**  
+**Second sample (problem statement Example 2).** One test case: $a=4$, $b=1$, $S=6$, Sun sum $3$. Queries $k=3,1,3,2,0,4$: $k=3$ ⇒ $(3,0)$; $k=1$ ⇒ $y=2$ impossible ($b=1$) ⇒ $-1$; $k=3$ ⇒ $(3,0)$; $k=2$ ⇒ $(1,1)$; $k=0$ ⇒ Sun sum $0\ne 3$ ⇒ $-1$; $k=4$ ⇒ $y<0$ ⇒ $-1$. Outputs: $3\ 0$, $-1$, $3\ 0$, $1\ 1$, $-1$, $-1$.
+
+**[atomic_02_03]**  
+Queries with $k<0$ or $k>a+b$ must always output $-1$ because the query requests an impossible number of Sun tiles.
+
+**[atomic_02_04]**  
 Cases where one tile type is absent should be tested:
 - If $a=0$, then necessarily $x=0$ and $y=k$ when a solution exists.
 - If $b=0$, then necessarily $y=0$ and $x=k$ when a solution exists.
 These cases are good for catching incorrect bounds or sign mistakes.
 
-**[atomic_02_03]**  
+**[atomic_02_05]**  
 Very small totals expose corner behavior:
 - If $a=b=0$, only $k=0$ is structurally possible.
 - If $a+b=1$, only $k\in\{0,1\}$ is structurally possible, but net energy $0$ may still be impossible.
 
-**[atomic_02_04]**  
+**[atomic_02_06]**  
 Parity-related scenarios are important to include in tests. In particular, there are inputs where no query can ever succeed due to parity restrictions in the total sum of values.
 
-**[atomic_02_05]**  
+**[atomic_02_07]**  
 Extreme magnitudes must be supported: $a$ and $b$ can be up to $10^{18}$, which means any approach relying on iterating over tiles or iterating over all values of $k$ (up to $a+b$) will not be viable in practice.
 
-**[atomic_02_06]**  
+**[atomic_02_08]**  
 Performance over many queries must be validated: the sum of $q$ across all test cases is up to $2\cdot 10^5$, so even moderate per-query overhead can become significant.
+
+Time complexity: This chain walks through statement samples and lists edge cases; it does not propose an algorithm, so we treat complexity as not applicable (NA) for this chain.
 
 ---
 
 **[section_03]**  
-Implementing brute-force tray assignments to confirm it is impossible under the constraints.
+**Chain Title:** Explore brute-force tray assignments to confirm it is impossible under the constraints.
 
 **[atomic_03_01]**  
 The most direct attempt is to decide for each of the $a+b$ tiles whether it goes to Sun or Moon, then check whether (1) exactly $k$ tiles were placed into Sun and (2) net energy equals $0$. This mirrors the statement exactly and is straightforward for tiny inputs.
@@ -74,10 +84,10 @@ Because $a$ and $b$ can be as large as $10^{18}$, any method that treats each ti
 ---
 
 **[section_04]**  
-Iterating over feasible $(x,y)$ counts per query and identifying why it still times out.
+**Chain Title:** Explore iterating over feasible $(x,y)$ counts per query.
 
 **[atomic_04_01]**  
-Since there are only values $1$ and $2$, any placement is determined by counts:
+We select this approach over section_03 because brute force is exponential in $a+b$; we try iterating over feasible $(x,y)$ counts per query. Since there are only values $1$ and $2$, any placement is determined by counts:
 - choose $x$ ones for Sun (so $a-x$ ones are in Moon),
 - choose $y$ twos for Sun (so $b-y$ twos are in Moon).
 The query restriction becomes $x+y=k$.
@@ -102,10 +112,10 @@ This is a clear improvement over exponential brute force, but it still relies on
 ---
 
 **[section_05]**  
-Using monotonicity to binary search the unique candidate and reducing per-query work to logarithmic time.
+**Chain Title:** Explore using monotonicity to binary search for the unique candidate.
 
 **[atomic_05_01]**  
-With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
+We select this approach over section_04 because linear scan over $\Theta(\min(a,k))$ candidates is infeasible for large inputs; we try binary search. With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
 
 **[atomic_05_02]**  
 When substituting $y=k-x$, the net energy expression becomes linear in $x$, meaning it changes in a single direction as $x$ increases (monotonic behavior). This is important because it lets us locate a zero (if it exists) without scanning every $x$.
@@ -127,10 +137,10 @@ Despite being fast enough, binary search is still more complicated than necessar
 ---
 
 **[section_06]**  
-Solving the constraints as a linear system to answer each query in constant time.
+**Chain Title:** Explore solving the constraints as a linear system for $O(1)$ per query.
 
 **[atomic_06_01]**  
-Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
+We select this approach over section_05 because binary search is unnecessary when the net energy is linear in $x$ and the solution is unique; we try solving the linear system directly. Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
 $$x+y=k.$$
 
 **[atomic_06_02]**  
@@ -181,10 +191,10 @@ This constant-time approach also aligns with the uniqueness guarantee: since the
 ---
 
 **[section_07]**  
-Translating the constant-time math into an input/output plan and validating with focused checks.
+**Chain Title:** Translate the constant-time math into an input/output plan and validate with focused checks.
 
 **[atomic_07_01]**  
-Because total queries across all test cases can be $2\cdot 10^5$, input reading should avoid per-integer overhead where possible, and output should be buffered. The critical requirement is to process each query with a constant amount of work.
+We select this approach as the implementation of section_06: translate the $O(1)$ per-query math into code. Because total queries across all test cases can be $2\cdot 10^5$, input reading should avoid per-integer overhead where possible, and output should be buffered. The critical requirement is to process each query with a constant amount of work.
 
 **[atomic_07_02]**  
 A robust per-test-case sequence is:

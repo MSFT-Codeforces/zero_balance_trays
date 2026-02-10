@@ -7,3 +7,4 @@
 **Number of Approaches:** - 4, ($O(2^{a+b})$ -> $O(\min(a,k))$ -> $O(\log(\min(a,k)+1))$ -> $O(1)$)
 **Number of Chains:** - 7
 **Model-Breaking:** - False
+**GitHub:** - https://github.com/MSFT-Codeforces/zero_balance_trays
