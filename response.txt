@@ -57,9 +57,6 @@ If all hold, print $x\ y$, else print $-1$.
 ---
 
 **3. Code**
-
-Code conventions in this solution: standard library only; single buffer read for fast I/O; descriptive variable names; docstrings for the module and functions. The code below follows these conventions.
-
 ```python
 """Solve the "Zero Balance Trays" problem using closed-form equations."""
 
@@ -170,13 +167,27 @@ if __name__ == "__main__":
 
 **4. Code Explanation**
 
-**Input parsing (end-to-end).** The code reads all input via `sys.stdin.buffer.read()` and parses integers with `iter_ints(data)`. It consumes: (1) first integer → $t$ (test case count); for each test case (2) next three integers → $a$, $b$, $q$; (3) next $q$ integers → the query $k$ values. No list of all integers is built; the iterator yields one integer at a time, so memory stays $O(1)$ for parsing.
+For each test case:
 
-**Components.** If $a$ is odd, $H=(a+2b)/2$ is not an integer, so the code outputs $-1$ for every query in that test case. If $a$ is even, it computes `half_total_value` $=H=a/2+b$ once, then for each query $k$ computes $y=H-k$, $x=2k-H$ and checks $0\le k\le a+b$, $0\le x\le a$, $0\le y\le b$; if all hold it prints `x y`, else $-1$.
+1. If `ones_count` (which is $a$) is odd, then
+   $$H=\frac{a+2b}{2}$$
+   is not an integer, so Sun sum cannot equal Moon sum. The code outputs `-1`
+   for all queries in that test case.
 
-**Sample walkthrough (Example 1, test case 3).** $a=2$, $b=3$, $q=4$, queries $k=1,2,3,4$. $a$ is even, so $H=1+3=4$. For $k=2$: $y=4-2=2$, $x=4-4=0$; bounds $0\le 2\le 2$, $0\le 0\le 2$, $0\le 2\le 3$ hold ⇒ output `0 2`. For $k=4$: $y=0$, $x=4$; $x=4>a=2$ ⇒ output $-1$.
+2. If $a$ is even, the code computes:
+   $$H=\frac{a}{2}+b$$
+   stored as `half_total_value`.
 
-**Example alignment:** For $a=4$, $b=1$, $k=2$, we get $H=3$, $y=1$, $x=1$; all bounds hold, so output `1 1`, matching the second example.
+3. For each query `sun_tile_count` (which is $k$), it computes the only possible
+   candidate:
+   $$y=H-k,\quad x=2k-H,$$
+   stored as `twos_in_sun` and `ones_in_sun`.
+
+4. It prints `x y` only if:
+   - $k \in [0,a+b]$
+   - $x \in [0,a]$
+   - $y \in [0,b]$  
+   Otherwise it prints `-1`.
 
 ---
 

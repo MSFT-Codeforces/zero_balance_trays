@@ -1,6 +1,4 @@
-**Zero Balance Trays**
-
-Time Limit: **1 second**
+Time Limit: **1 seconds**
 
 Memory Limit: **32 MB**
 
@@ -106,7 +104,7 @@ $$x+y=k,\quad x+2y=4.$$
 - $k=3$ gives $y=1$, $x=2$, so output $2\ 1$.  
 - $k=4$ gives $y=0$, $x=4$ but $x>a=2$, so impossible.
 
-In the **second** example, test case 1 has $a=4$, $b=1$, so $S=a+2b=6$ and the Sun tray must have sum $S/2=3$.  
+In the first example, **test case 1** of the second sample has $a=4$, $b=1$, so $S=a+2b=6$ and the Sun tray must have sum $S/2=3$.  
 - $k=3$: solving $x+y=3$ and $x+2y=3$ gives $(x,y)=(3,0)$.  
 - $k=1$: would require $y=2$ (not possible since $b=1$), so $-1$.  
 - $k=3$ again gives $(3,0)$.  
