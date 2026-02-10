@@ -98,7 +98,7 @@ Despite being fast enough, binary search is still more complicated than necessar
 ---
 
 **[section_06]**
-**Chain Title** Deriving a closed-form solution from the linear system in $x$ and $y$.
+**Chain Title** Investigating whether the linear system in $x$ and $y$ admits a closed-form solution.
 **[atomic_06_01]**
 **Why this approach over CHAIN05:** CHAIN05 achieves $O(\log(\min(a,k)+1))$ per query via binary search, which is fast enough for the constraints, but it requires implementing a search loop and multiple evaluations of the net-energy expression. The constraints in $x$ and $y$ form a linear system with at most one solution; we can solve that system in closed form and obtain $(x,y)$ with a few arithmetic operations. We therefore prefer the closed-form solution here: it gives $O(1)$ per query with simpler code and no search, and it makes the uniqueness of the answer explicit.
 **[atomic_06_02]**
@@ -148,7 +148,7 @@ This constant-time approach also aligns with the uniqueness guarantee: since the
 ---
 
 **[section_07]**
-**Chain Title** Outlining an input/output plan and validating correctness with focused checks.
+**Chain Title** Investigating how to map the solution conditions to an I/O plan and which checks ensure correctness.
 **[atomic_07_01]**
 **Data structures and I/O, linked to constraints:** The sum of $q$ over all test cases is at most $2\cdot 10^5$, and $t\le 2\cdot 10^4$, so we read and write on the order of $2\cdot 10^5$ integers. If each read or write incurs large per-call overhead (e.g. unbuffered sys.stdin/sys.stdout in Python), total I/O time can dominate and risk TLE. The reasoned choice is to use buffered I/O (e.g. reading lines or batches, and collecting output in a list or buffer before flushing) so that I/O cost stays linear in the number of integers and does not multiply by per-call overhead. No additional data structures (no segment tree, no precomputed tables, no extra arrays) are needed: each query is $O(1)$ and we only store $a,b,q,H$ and the current $k$ per test case, so $O(1)$ auxiliary space. The constraints (bounded total $q$, no update operations) justify this minimal setup rather than any heavier structure.
 **[atomic_07_02]**
