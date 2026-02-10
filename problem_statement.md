@@ -13,18 +13,14 @@ Let $S$ be the sum of tile values in the Sun tray and $M$ the sum in the Moon tr
 
 In the query, an integer $k$ is given: **exactly $k$ tiles must be placed into the Sun tray** (so the remaining $a+b-k$ tiles go to the Moon tray).
 
-For each query you receive an integer $k$. **If $k\notin [0,a+b]$**, then it is impossible to place exactly $k$ tiles in the Sun tray (there are only $a+b$ tiles); **output $-1$** in that case. Otherwise, determine whether it is possible to make the net energy exactly $0$ with exactly $k$ tiles in the Sun tray.
+For each query you receive an integer $k$. **If $k\notin [0,a+b]$**, then it is impossible to place exactly $k$ tiles in the Sun tray (there are only $a+b$ tiles); **output $-1$** in that case. Otherwise, determine whether there exists a distribution with exactly $k$ tiles in the Sun tray and net energy $0$.
 
-- If possible, output two integers $x$ and $y$:
-  - $x$ = number of value-$1$ tiles placed into the Sun tray
-  - $y$ = number of value-$2$ tiles placed into the Sun tray
+Any such distribution is described by two counts: $x$ = number of value-$1$ tiles in the Sun tray, $y$ = number of value-$2$ tiles in the Sun tray. A pair $(x,y)$ is **valid** if $0 <= x <= a$, $0 <= y <= b$, $x+y=k$, and the resulting net energy is $0$.
+
+- If a valid pair $(x,y)$ exists, output $x$ and $y$. Under the problem constraints (tile values $1$ and $2$, exactly $k$ in Sun) there is **at most one** valid pair per query; you must output that pair when it exists.
 - Otherwise output $-1$.
 
-**Why net energy $0$ fixes the Sun tray sum:** The total value of all tiles is $a+2b$. Every tile is in Sun or Moon, so $S+M=a+2b$. Net energy $0$ means $S-M=0$, so $S=M$. Hence $2*S=a+2b$, so the Sun tray sum must equal $\frac{a+2b}{2}$. That is an integer only when $a+2b$ is even, i.e. $a$ is even.
-
-**When $k\in [0,a+b]$**, the Sun tray has sum $x+2y$ (since it contains $x$ tiles of value $1$ and $y$ tiles of value $2$). For net energy $0$ we need $x+2y=\frac{a+2b}{2}$, and we also need $x+y=k$. These two linear equations in $x$ and $y$ have exactly one solution when $\frac{a+2b}{2}$ is an integer, i.e. $a$ is even: subtracting $x+y=k$ from $x+2y=\frac{a+2b}{2}$ gives $y=\frac{a+2b}{2}-k$, and then $x=k-y=2k-\frac{a+2b}{2}$. So the **only candidate** pair is
-$$x=2k-\frac{a+2b}{2}, y=\frac{a+2b}{2}-k.$$
-A distribution is **possible** if and only if $a$ is even and this candidate satisfies $0 <= x <= a$ and $0 <= y <= b$. When valid, this is the **only** pair $(x,y)$ that satisfies the rules; you must output this pair. When invalid, output $-1$.
+**Output rule (judging):** For each query there is at most one valid pair. When it exists, you must output that pair. When it does not, output $-1$. Same input must always produce the same output.
 
 Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
 
@@ -39,8 +35,8 @@ Each test case contains:
 **Output Format:-**
 
 For each query, print:
-- $-1$ if it is impossible, or
-- two integers $x$ and $y$ representing a valid distribution into the Sun tray.
+- $-1$ if no valid distribution exists, or
+- the unique valid pair: two integers $x$ and $y$ (value-$1$ and value-$2$ counts in the Sun tray).
 
 **Constraints:-**
 
@@ -95,6 +91,8 @@ For each query, print:
 ```
 
 **Note:-**  
+**Why the answer is unique (optional):** Total value of all tiles is $a+2b$. For net energy $0$, Sun tray sum must equal $\frac{a+2b}{2}$, so $a$ must be even. When $k\in [0,a+b]$ and $a$ is even, the conditions $x+y=k$ and Sun sum $=x+2y=\frac{a+2b}{2}$ give a unique pair $x=2k-\frac{a+2b}{2}$, $y=\frac{a+2b}{2}-k$; it is valid iff $0 <= x <= a$ and $0 <= y <= b$. This is why the required output is deterministic.
+
 The following explains how each line of the example output is produced, in order. Here, **total value** means $a+2b$ (sum of all tile values).
 
 **Example 1.**  
