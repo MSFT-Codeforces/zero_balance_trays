@@ -11,9 +11,7 @@ No tile can be discarded or duplicated.
 **[atomic_01_03]**
 A query provides an integer $k$ with the rule: exactly $k$ tiles must be placed into the Sun tray. Therefore, exactly $a+b-k$ tiles are forced into the Moon tray. If $k$ is not in the range $[0,a+b]$, the query is invalid under the rules.
 **[atomic_01_04]**
-After placing all tiles, the net energy is computed as:
-$$\text{Sun sum}-\text{Moon sum}.$$
-The query asks whether the net energy can be made exactly $0$ while still placing exactly $k$ tiles in Sun.
+Let $S$ be the sum of tile values in the Sun tray and $M$ the sum in the Moon tray. After placing all tiles, the net energy is $S-M$. The query asks whether the net energy can be made exactly $0$ while still placing exactly $k$ tiles in Sun.
 **[atomic_01_05]**
 When a query is solvable, the output must be two integers $(x,y)$:
 - $x$ is the count of value-$1$ tiles placed in Sun,
@@ -27,15 +25,15 @@ If it is not solvable, output $-1$. The two constraints (exactly $k$ in Sun and 
 **Chain Title** Walking through the provided sample test cases from the problem statement.
 **[atomic_02_01]**
 **Example 1.** Input:
-$t=3$. Test case 1: $a=0$, $b=2$, $q=2$ with $k=1$ then $k=0$. Total value $S=a+2b=4$, so net energy $0$ requires Sun sum $=S/2=2$. For $k=1$: we need one tile in Sun with sum $2$; the only possibility is one tile of value $2$, so $x=0$, $y=1$ → output `0 1`. For $k=0$: zero tiles in Sun gives Sun sum $0 \neq 2$ → output `-1`. So the first two lines of output are `0 1` and `-1`.
+$t=3$. Test case 1: $a=0$, $b=2$, $q=2$ with $k=1$ then $k=0$. Total value $S=a+2b=4$, so net energy $0$ requires Sun sum $=S/2=2$. For $k=1$: we need one tile in Sun with sum $2$; the only possibility is one tile of value $2$, so $x=0$, $y=1$ → output `0 1`. For $k=0$: zero tiles in Sun gives Sun sum $0 != 2$ → output `-1`. So the first two lines of output are `0 1` and `-1`.
 **[atomic_02_02]**
 **First sample, test case 2.** $a=3$, $b=1$, $q=3$ with $k=0$, $k=2$, $k=4$. Here $S=3+2=5$ is odd, so $S/2$ is not an integer and net energy $0$ is impossible for every $k$. All three queries must output `-1`. That matches the statement output: `-1`, `-1`, `-1`.
 **[atomic_02_03]**
-**First sample, test case 3.** $a=2$, $b=3$, $q=4$ with $k=1$, $k=2$, $k=3$, $k=4$. $S=2+6=8$, so Sun sum must be $4$. We need $x+y=k$ and $x+2y=4$. $k=1$: max Sun sum with one tile is $2<4$ → `-1`. $k=2$: $y=2$, $x=0$; check $0\le x\le 2$, $0\le y\le 3$ → output `0 2`. $k=3$: $y=1$, $x=2$ → output `2 1`. $k=4$: $y=0$, $x=4$ but $x\le a=2$ fails → `-1`. So the four outputs are `-1`, `0 2`, `2 1`, `-1`, matching the statement.
+**First sample, test case 3.** $a=2$, $b=3$, $q=4$ with $k=1$, $k=2$, $k=3$, $k=4$. $S=2+6=8$, so Sun sum must be $4$. We need $x+y=k$ and $x+2y=4$. $k=1$: max Sun sum with one tile is $2<4$ → `-1`. $k=2$: $y=2$, $x=0$; check $0 <= x <= 2$, $0 <= y <= 3$ → output `0 2`. $k=3$: $y=1$, $x=2$ → output `2 1`. $k=4$: $y=0$, $x=4$ but $x <= a=2$ fails → `-1`. So the four outputs are `-1`, `0 2`, `2 1`, `-1`, matching the statement.
 **[atomic_02_04]**
-**Example 2.** Single test case: $a=4$, $b=1$, $q=6$, queries $k=3,1,3,2,0,4$. $S=4+2=6$, Sun sum must be $3$. $k=3$: $x+y=3$, $x+2y=3$ → $y=0$, $x=3$; $0\le x\le 4$, $0\le y\le 1$ → `3 0`. $k=1$: $x+y=1$, $x+2y=3$ → $y=2$ but $y\le b=1$ fails → `-1`. $k=3$ again → `3 0`. $k=2$: $x+y=2$, $x+2y=3$ → $y=1$, $x=1$ → `1 1`. $k=0$: Sun sum $0\neq 3$ → `-1`. $k=4$: $x+y=4$, $x+2y=3$ gives $y=-1$ → `-1`. So the six outputs are `3 0`, `-1`, `3 0`, `1 1`, `-1`, `-1`, matching the statement.
+**Example 2.** Single test case: $a=4$, $b=1$, $q=6$, queries $k=3,1,3,2,0,4$. $S=4+2=6$, Sun sum must be $3$. $k=3$: $x+y=3$, $x+2y=3$ → $y=0$, $x=3$; $0 <= x <= 4$, $0 <= y <= 1$ → `3 0`. $k=1$: $x+y=1$, $x+2y=3$ → $y=2$ but $y <= b=1$ fails → `-1`. $k=3$ again → `3 0`. $k=2$: $x+y=2$, $x+2y=3$ → $y=1$, $x=1$ → `1 1`. $k=0$: Sun sum $0 != 3$ → `-1`. $k=4$: $x+y=4$, $x+2y=3$ gives $y=-1$ → `-1`. So the six outputs are `3 0`, `-1`, `3 0`, `1 1`, `-1`, `-1`, matching the statement.
 **[atomic_02_05]**
-These walkthroughs confirm that the stated inputs produce the stated outputs and illustrate: (1) $a=0$ with only value-$2$ tiles, (2) odd total sum so no query can succeed, (3) feasible and infeasible $k$ in the same test case with bounds $0\le x\le a$, $0\le y\le b$, and (4) repeated $k$ and ordering of queries. This chain does not describe an algorithmic approach; it only verifies the samples. There is no asymptotic cost to discuss here.
+These walkthroughs confirm that the stated inputs produce the stated outputs and illustrate: (1) $a=0$ with only value-$2$ tiles, (2) odd total sum so no query can succeed, (3) feasible and infeasible $k$ in the same test case with bounds $0 <= x <= a$, $0 <= y <= b$, and (4) repeated $k$ and ordering of queries. This chain does not describe an algorithmic approach; it only verifies the samples. There is no asymptotic cost to discuss here.
 
 ---
 
@@ -44,7 +42,7 @@ These walkthroughs confirm that the stated inputs produce the stated outputs and
 **[atomic_03_01]**
 The most direct attempt is to decide for each of the $a+b$ tiles whether it goes to Sun or Moon, then check whether (1) exactly $k$ tiles were placed into Sun and (2) net energy equals $0$. This mirrors the statement exactly and is straightforward for tiny inputs.
 **[atomic_03_02]**
-This explores all sign assignments, which is $2^{a+b}$ possibilities. Even if we restrict to assignments with exactly $k$ Sun tiles, there are still $\binom{a+b}{k}$ possibilities, which is enormous for moderately large $a+b$.
+This explores all sign assignments, which is $2^{a+b}$ possibilities. Even if we restrict to assignments with exactly $k$ Sun tiles, there are still the binomial coefficient $(a+b)$ choose $k$ possibilities, which is enormous for moderately large $a+b$.
 **[atomic_03_03]**
 Time complexity is exponential: $O(2^{a+b})$ in the worst case. Space can be kept small, but time dominates completely. This approach fails immediately once $a+b$ grows beyond a few dozen.
 **[atomic_03_04]**
@@ -61,15 +59,15 @@ Since there are only values $1$ and $2$, any placement is determined by counts:
 The query restriction becomes $x+y=k$.
 **[atomic_04_02]**
 A natural per-query method is to enumerate all possible $x$ values that could satisfy $x+y=k$:
-- $x$ must satisfy $0 \le x \le a$,
-- $y=k-x$ must satisfy $0 \le y \le b$.
+- $x$ must satisfy $0 <= x <= a$,
+- $y=k-x$ must satisfy $0 <= y <= b$.
 For each feasible $(x,y)$ candidate, we would compute the net energy and check if it is $0$.
 **[atomic_04_03]**
 The number of candidates to scan is the size of the integer interval:
-$$x \in [\max(0,k-b),\min(a,k)].$$
-In the worst case this range length is $\Theta(\min(a,k))$, which can be as large as $10^{18}$.
+The feasible $x$ values are those in the interval $[max(0,k-b), min(a,k)]$.
+In the worst case this range length is $O(min(a,k))$, which can be as large as $10^{18}$.
 **[atomic_04_04]**
-Time complexity becomes $O(\min(a,k))$ per query (or similarly $O(\min(b,k))$ if scanning $y$). With up to $2\cdot 10^5$ queries, this is infeasible even when only one of $a$ or $b$ is large.
+Time complexity becomes $O(min(a,k))$ per query (or similarly $O(min(b,k))$ if scanning $y$). With up to $2*10^5$ queries, this is infeasible even when only one of $a$ or $b$ is large.
 **[atomic_04_05]**
 This is a clear improvement over exponential brute force, but it still relies on iterating over a potentially massive range of candidates. The next refinement must avoid linear scanning and instead narrow down to the right candidate more efficiently.
 
@@ -78,18 +76,17 @@ This is a clear improvement over exponential brute force, but it still relies on
 **[section_05]**
 **Chain Title** Exploring binary search on a monotone function.
 **[atomic_05_01]**
-**Why this approach over CHAIN04:** CHAIN04 enumerates all $x$ in the feasible interval, giving $O(\min(a,k))$ work per query, which is infeasible when $a$ or $k$ is large (e.g. up to $10^{18}$). We therefore look for a way to avoid scanning: the net energy, as a function of $x$ (with $y=k-x$), is linear and hence monotone, so we can binary search for the unique zero instead of iterating over every candidate. That is why we introduce binary search here rather than stick with linear enumeration.
+**Why this approach over CHAIN04:** CHAIN04 enumerates all $x$ in the feasible interval, giving $O(min(a,k))$ work per query, which is infeasible when $a$ or $k$ is large (e.g. up to $10^{18}$). We therefore look for a way to avoid scanning: the net energy, as a function of $x$ (with $y=k-x$), is linear and hence monotone, so we can binary search for the unique zero instead of iterating over every candidate. That is why we introduce binary search here rather than stick with linear enumeration.
 **[atomic_05_02]**
 With $y=k-x$, the net energy becomes a function of a single variable $x$. For any fixed $(a,b,k)$, once $x$ is chosen, the pair $(x,y)$ is determined, so checking feasibility reduces to finding whether there exists an integer $x$ in the feasible range that yields net energy $0$.
 **[atomic_05_03]**
 When substituting $y=k-x$, the net energy expression becomes linear in $x$, meaning it changes in a single direction as $x$ increases (monotonic behavior). This is important because it lets us locate a zero (if it exists) without scanning every $x$.
 **[atomic_05_04]**
 Given monotonicity over the feasible interval
-$$x \in [L,R]=[\max(0,k-b),\min(a,k)],$$
-we can binary search for an $x$ where net energy is $0$. After binary search selects a candidate $x$, we compute $y=k-x$ and verify all constraints. This replaces $O(R-L+1)$ scanning with $O(\log(R-L+1))$ checks.
+So $x$ lies in $[L,R]=[max(0,k-b), min(a,k)]$. We can binary search for an $x$ where net energy is $0$. After binary search selects a candidate $x$, we compute $y=k-x$ and verify all constraints. This replaces $O(R-L+1)$ scanning with $O(log(R-L+1))$ checks.
 **[atomic_05_05]**
 Complexity improves to:
-- Time per query: $O(\log(\min(a,k)+1))$,
+- Time per query: $O(log(min(a,k)+1))$,
 - Space: $O(1)$.
 This is strictly better than the linear scan from the previous approach.
 **[atomic_05_06]**
@@ -100,62 +97,56 @@ Despite being fast enough, binary search is still more complicated than necessar
 **[section_06]**
 **Chain Title** Investigating whether the linear system in $x$ and $y$ admits a closed-form solution.
 **[atomic_06_01]**
-**Why this approach over CHAIN05:** CHAIN05 achieves $O(\log(\min(a,k)+1))$ per query via binary search, which is fast enough for the constraints, but it requires implementing a search loop and multiple evaluations of the net-energy expression. The constraints in $x$ and $y$ form a linear system with at most one solution; we can solve that system in closed form and obtain $(x,y)$ with a few arithmetic operations. We therefore prefer the closed-form solution here: it gives $O(1)$ per query with simpler code and no search, and it makes the uniqueness of the answer explicit.
+**Why this approach over CHAIN05:** CHAIN05 achieves $O(log(min(a,k)+1))$ per query via binary search, which is fast enough for the constraints, but it requires implementing a search loop and multiple evaluations of the net-energy expression. The constraints in $x$ and $y$ form a linear system with at most one solution; we can solve that system in closed form and obtain $(x,y)$ with a few arithmetic operations. We therefore prefer the closed-form solution here: it gives $O(1)$ per query with simpler code and no search, and it makes the uniqueness of the answer explicit.
 **[atomic_06_02]**
 Let $x$ be the number of value-$1$ tiles in Sun and $y$ be the number of value-$2$ tiles in Sun. The query restriction “exactly $k$ tiles in Sun” becomes:
 $$x+y=k.$$
 **[atomic_06_03]**
-Net energy equals:
-$$\text{Sun sum}-\text{Moon sum}.$$
-Ones contribute $x-(a-x)=2x-a$ and twos contribute $2y-2(b-y)=4y-2b$, so net energy $0$ implies:
+Net energy equals $S-M$ (with $S$ the Sun tray sum and $M$ the Moon tray sum). Ones contribute $x-(a-x)=2x-a$ and twos contribute $2y-2(b-y)=4y-2b$, so net energy $0$ implies:
 $$(2x-a)+(4y-2b)=0.$$
 **[atomic_06_04]**
 Rearrange:
 $$2x+4y=a+2b,$$
 divide by $2$:
-$$x+2y=\frac{a+2b}{2}.$$
+$$x+2y=(a+2b)/2.$$
 Let:
-$$H=\frac{a+2b}{2}.$$
+$$H=(a+2b)/2.$$
 A necessary condition is that $H$ is an integer, which happens exactly when $a$ is even.
 **[atomic_06_05]**
 If $a$ is odd, then $H$ is not an integer, so no solution can exist for any query in that test case. Every query output is $-1$, and we only need to consume the input values of $k$.
 **[atomic_06_06]**
 Assume $a$ is even. Then:
-$$H=\frac{a}{2}+b.$$
+$$H=a/2+b.$$
 Solve the system:
-$$\begin{cases}
-x+y=k \\
-x+2y=H
-\end{cases}$$
-Subtract the first equation from the second:
+We have $x+y=k$ and $x+2y=H$. Subtract the first equation from the second:
 $$y=H-k,$$
 and then:
 $$x=k-y=2k-H.$$
 This produces exactly one candidate pair $(x,y)$ for each query.
 **[atomic_06_07]**
 The candidate is feasible if and only if all bounds are satisfied:
-- $0 \le k \le a+b$,
-- $0 \le x \le a$,
-- $0 \le y \le b$.
+- $0 <= k <= a+b$,
+- $0 <= x <= a$,
+- $0 <= y <= b$.
 If any bound fails, the unique candidate is invalid, so the answer must be $-1$.
 **[atomic_06_08]**
-Per-query time is $O(1)$: a few integer operations and comparisons. Space remains $O(1)$ besides storing output. This strictly improves upon the $O(\log n)$ binary search approach.
+Per-query time is $O(1)$: a few integer operations and comparisons. Space remains $O(1)$ besides storing output. This strictly improves upon the $O(log n)$ binary search approach.
 **[atomic_06_09]**
 This constant-time approach also aligns with the uniqueness guarantee: since there is at most one solution, it is sufficient to compute the only possible candidate and validate it, rather than search among many possibilities.
 **[atomic_06_10]**
-**Corner cases and revision of reasoning:** Do any corner cases force us to revise this approach? $a$ odd: no revision—we never use the formula; we output $-1$ for every query in that test case, so the closed-form derivation is simply not applied. $k=0$ or $k=a+b$: the same candidate $(x,y)=(2k-H,\,H-k)$ and the same bounds $0\le x\le a$, $0\le y\le b$ apply; we only need to ensure the implementation checks these bounds (e.g. $k=0$ gives $y=H$, $x=-H$, which fails if $H>0$). $a=0$ or $b=0$: again the same formula and bounds apply; when $a=0$ we must have $x=0$, and the bounds check $0\le x\le a$ enforces that; when $b=0$, $0\le y\le b$ forces $y=0$. Large $a,b$ up to $10^{18}$: the derivation uses only integer arithmetic and comparisons; no loop or array is involved, so no revision. None of these corner cases require a different algorithm or a second pass; the single formula plus bounds check suffices.
+**Corner cases and revision of reasoning:** Do any corner cases force us to revise this approach? $a$ odd: no revision—we never use the formula; we output $-1$ for every query in that test case, so the closed-form derivation is simply not applied. $k=0$ or $k=a+b$: the same candidate $(x,y)=(2k-H, H-k)$ and the same bounds $0 <= x <= a$, $0 <= y <= b$ apply; we only need to ensure the implementation checks these bounds (e.g. $k=0$ gives $y=H$, $x=-H$, which fails if $H>0$). $a=0$ or $b=0$: again the same formula and bounds apply; when $a=0$ we must have $x=0$, and the bounds check $0 <= x <= a$ enforces that; when $b=0$, $0 <= y <= b$ forces $y=0$. Large $a,b$ up to $10^{18}$: the derivation uses only integer arithmetic and comparisons; no loop or array is involved, so no revision. None of these corner cases require a different algorithm or a second pass; the single formula plus bounds check suffices.
 
 ---
 
 **[section_07]**
 **Chain Title** Investigating how to map the solution conditions to an I/O plan and which checks ensure correctness.
 **[atomic_07_01]**
-**Data structures and I/O, linked to constraints:** The sum of $q$ over all test cases is at most $2\cdot 10^5$, and $t\le 2\cdot 10^4$, so we read and write on the order of $2\cdot 10^5$ integers. If each read or write incurs large per-call overhead (e.g. unbuffered sys.stdin/sys.stdout in Python), total I/O time can dominate and risk TLE. The reasoned choice is to use buffered I/O (e.g. reading lines or batches, and collecting output in a list or buffer before flushing) so that I/O cost stays linear in the number of integers and does not multiply by per-call overhead. No additional data structures (no segment tree, no precomputed tables, no extra arrays) are needed: each query is $O(1)$ and we only store $a,b,q,H$ and the current $k$ per test case, so $O(1)$ auxiliary space. The constraints (bounded total $q$, no update operations) justify this minimal setup rather than any heavier structure.
+**Data structures and I/O, linked to constraints:** The sum of $q$ over all test cases is at most $2*10^5$, and $t <= 2*10^4$, so we read and write on the order of $2*10^5$ integers. If each read or write incurs large per-call overhead (e.g. unbuffered sys.stdin/sys.stdout in Python), total I/O time can dominate and risk TLE. The reasoned choice is to use buffered I/O (e.g. reading lines or batches, and collecting output in a list or buffer before flushing) so that I/O cost stays linear in the number of integers and does not multiply by per-call overhead. No additional data structures (no segment tree, no precomputed tables, no extra arrays) are needed: each query is $O(1)$ and we only store $a,b,q,H$ and the current $k$ per test case, so $O(1)$ auxiliary space. The constraints (bounded total $q$, no update operations) justify this minimal setup rather than any heavier structure.
 **[atomic_07_02]**
 A robust per-test-case sequence is:
-1) read $a,b,q$ and compute $\text{total}=a+b$,  
+1) read $a,b,q$ and compute $n=a+b$ (total tile count),  
 2) if $a$ is odd: read and ignore $q$ values of $k$, output $-1$ for each,  
-3) else compute $H=\frac{a}{2}+b$ once, and for each query compute $(x,y)$ as $(2k-H,\ H-k)$ and validate bounds.
+3) else compute $H=a/2+b$ once, and for each query compute $(x,y)$ as $(2k-H, H-k)$ and validate bounds.
 **[atomic_07_03]**
 Validation must include all three categories of failure:
 - invalid $k$ outside $[0,a+b]$,
@@ -179,5 +170,5 @@ Targeted correctness checks (as test ideas) include:
 These checks validate that the single formula plus bounds cover all corner cases without requiring us to revise earlier reasoning.
 **[atomic_07_06]**
 Final complexity summary:
-- Approach progression: $O(2^{a+b}) \to O(\min(a,k)) \to O(\log(\min(a,k)+1)) \to O(1)$ per query.
+- Approach progression: $O(2^{a+b})$ to $O(min(a,k))$ to $O(log(min(a,k)+1))$ to $O(1)$ per query.
 - Final complexity: $O(q)$ time per test case and $O(1)$ auxiliary space, which matches the constraints because it scales with the number of queries rather than the magnitude of $a$ and $b$.
