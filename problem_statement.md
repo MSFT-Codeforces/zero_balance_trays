@@ -22,9 +22,17 @@ For each query, determine whether it is possible to make the net energy exactly 
   - $y$ = number of value-$2$ tiles placed into the Sun tray
 - Otherwise output $-1$.
 
-For fixed $(a,b,k)$, the conditions “exactly $k$ tiles in Sun” and “net energy $0$” reduce to two linear equations in $x$ and $y$ ($x+y=k$ and Sun sum $= (a+2b)/2$). That system has at most one solution when consistent, so when a solution exists the pair $(x,y)$ is uniquely determined. Output that unique pair; when no solution exists, output $-1$. Thus the required output is deterministic for every valid input.
+A distribution is **possible** if and only if there exist nonnegative integers $x$ and $y$ such that:
+- $x+y=k$ (exactly $k$ tiles in the Sun tray),
+- $0 \le x \le a$ and $0 \le y \le b$ (we do not use more value-$1$ or value-$2$ tiles than we have),
+- $0 \le k \le a+b$ (the query asks for a valid number of Sun tiles),
+- and the net energy is $0$ (which forces the Sun tray sum to equal $(a+2b)/2$).
+
+When a solution exists, the pair $(x,y)$ is uniquely determined (the conditions reduce to two linear equations in $x$ and $y$ with at most one solution). Output that unique pair; when no solution exists, output $-1$.
 
 Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
+
+XXX “exactly $k$ tiles in Sun” and “net energy $0$” reduce to two linear equations in $x$ and $y$ ($x+y=k$ and Sun sum $= (a+2b)/2$). That system has at most one solution when consistent, so when a solution exists the pair $(x,y)$ is uniquely determined. Output that unique pair; when no solution exists, output $-1$. Thus the required output is deterministic for every valid input.
 
 **Input Format:-**
 
