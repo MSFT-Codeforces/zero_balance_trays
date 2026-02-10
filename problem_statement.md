@@ -22,7 +22,9 @@ For each query, determine whether it is possible to make the net energy exactly 
   - $y$ = number of value-$2$ tiles placed into the Sun tray
 - Otherwise output $-1$.
 
-It is guaranteed that for fixed $(a,b,k)$, if a solution exists then the pair $(x,y)$ is unique.
+It is guaranteed that for fixed $(a,b,k)$, when a solution exists the pair $(x,y)$ is unique. In that case output that unique pair; when no solution exists, output $-1$. (The guarantee ensures that you will never be given inputs where multiple valid $(x,y)$ exist for the same query.)
+
+Queries are independent: each query uses the same multiset $(a,b)$ and does not modify it; answers depend only on the query value $k$ and the fixed $a,b$.
 
 **Input Format:-**
 
@@ -30,7 +32,7 @@ The first line contains an integer $t$ — the number of test cases.
 
 Each test case contains:
 - A line with three integers $a$, $b$, $q$.
-- Then $q$ integers $k$ (possibly spanning multiple lines), one per query.
+- Then $q$ integers $k$ (possibly spanning multiple lines), one per query. Each of the $q$ queries is independent and reads one $k$; the multiset is unchanged across queries.
 
 **Output Format:-**
 
